@@ -54,7 +54,10 @@
 
         <div class="flex-1 overflow-y-auto p-8 relative">
             
+            
+        {{-- La directiva @yield('contenido') es el "hueco" donde entran las vistas hijas --}}
             @yield('contenido')
+        @yield('contenido')
 
         </div>
     </main>
