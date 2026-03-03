@@ -31,4 +31,6 @@ Route::get('/recepcion', function () {
     return view('recepcion');
 });
 
-// Aquí tus compañeros pueden ir agregando: /servicios, /repuestos, etc.
+Route::get('/servicios', function () {
+    return view('servicios');
+});

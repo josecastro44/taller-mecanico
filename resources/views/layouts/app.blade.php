@@ -57,7 +57,6 @@
             
         {{-- La directiva @yield('contenido') es el "hueco" donde entran las vistas hijas --}}
             @yield('contenido')
-        @yield('contenido')
 
         </div>
     </main>
