@@ -13,19 +13,38 @@
         </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm border-t-4 border-t-green-500">
-            <p class="text-sm text-[#728495] font-medium mb-1">Ingresos Brutos (Mes)</p>
-            <p class="text-3xl font-bold text-[#263A47]">$ 12,450.00</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        
+        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm flex items-center justify-between border-l-4 border-l-green-500">
+            <div>
+                <p class="text-sm text-[#728495] font-medium mb-1">Ingresos Brutos (Mes)</p>
+                <p class="text-3xl font-bold text-[#263A47]">$ 12,450.00</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                <i class="ph ph-trend-up text-2xl text-green-500"></i>
+            </div>
         </div>
-        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm border-t-4 border-t-red-500">
-            <p class="text-sm text-[#728495] font-medium mb-1">Egresos (Nómina + Repuestos + Gastos)</p>
-            <p class="text-3xl font-bold text-[#263A47]">$ 7,820.00</p>
+
+        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm flex items-center justify-between border-l-4 border-l-red-500">
+            <div>
+                <p class="text-sm text-[#728495] font-medium mb-1">Egresos (Nómina + Repuestos)</p>
+                <p class="text-3xl font-bold text-[#263A47]">$ 7,820.00</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-red-50 flex items-center justify-center">
+                <i class="ph ph-trend-down text-2xl text-red-500"></i>
+            </div>
         </div>
-        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm border-t-4 border-t-[#263A47] bg-[#B4C5D8]/10">
-            <p class="text-sm text-[#728495] font-medium mb-1">Utilidad Neta (Ganancia Real)</p>
-            <p class="text-3xl font-bold text-green-700">$ 4,630.00</p>
+
+        <div class="bg-white p-6 rounded-xl border border-[#98A9BE]/50 shadow-sm flex items-center justify-between border-l-4 border-l-blue-600">
+            <div>
+                <p class="text-sm text-[#728495] font-medium mb-1">Utilidad Neta (Ganancia Real)</p>
+                <p class="text-3xl font-bold text-[#263A47]">$ 4,630.00</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+                <i class="ph ph-coins text-2xl text-blue-600"></i>
+            </div>
         </div>
+
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">

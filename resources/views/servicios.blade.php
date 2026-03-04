@@ -7,7 +7,7 @@
             <h2 class="text-2xl font-bold text-[#263A47]">Catálogo de Servicios (Mano de Obra)</h2>
             <p class="text-[#728495]">Gestión de precios tabulados y variaciones por categoría de vehículo</p>
         </div>
-        <button class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
+        <button onclick="abrirModal()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
             <i class="ph ph-plus-circle text-xl"></i>
             Nuevo Servicio
         </button>
@@ -97,5 +97,70 @@
             </div>
         </div>
     </div>
+
+    <div id="modal-nuevo-servicio" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
+        
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all">
+            
+            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10">
+                <h3 class="text-lg font-bold text-[#263A47]">Registrar Nuevo Servicio</h3>
+                <button onclick="cerrarModal()" class="text-[#728495] hover:text-red-500 transition">
+                    <i class="ph ph-x text-2xl"></i>
+                </button>
+            </div>
+            
+            <form class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Código del Servicio</label>
+                        <input type="text" placeholder="Ej. SRV-004" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Descripción del Servicio *</label>
+                        <input type="text" placeholder="Ej. Alineación y Balanceo" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]" required>
+                    </div>
+                    
+                    <div class="md:col-span-2 mt-2 border-t border-[#B4C5D8]/50 pt-5">
+                        <p class="text-sm font-bold text-[#4A5B6A] uppercase tracking-wider mb-4">Tarifas por Categoría</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-[#728495] mb-1">Precio Sencillo ($)</label>
+                                <input type="number" placeholder="0.00" class="w-full border border-[#B4C5D8] rounded-lg px-3 py-2 outline-none focus:border-[#263A47]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#728495] mb-1">Precio Alta Gama ($)</label>
+                                <input type="number" placeholder="0.00" class="w-full border border-[#B4C5D8] rounded-lg px-3 py-2 outline-none focus:border-[#263A47]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[#728495] mb-1">Precio Carga Pesada ($)</label>
+                                <input type="number" placeholder="0.00" class="w-full border border-[#B4C5D8] rounded-lg px-3 py-2 outline-none focus:border-[#263A47]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end gap-3">
+                    <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 border border-[#B4C5D8] text-[#728495] font-semibold rounded-lg hover:bg-[#B4C5D8]/20 transition">
+                        Cancelar
+                    </button>
+                    <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 bg-[#263A47] text-white font-semibold rounded-lg hover:bg-[#4A5B6A] shadow-md transition">
+                        Guardar Servicio
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <script>
+        function abrirModal() {
+            document.getElementById('modal-nuevo-servicio').classList.remove('hidden');
+        }
+        function cerrarModal() {
+            document.getElementById('modal-nuevo-servicio').classList.add('hidden');
+        }
+    </script>
 
 @endsection

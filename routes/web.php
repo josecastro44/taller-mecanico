@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 // ==========================================
 // RUTAS PÚBLICAS (Cualquier usuario puede verlas)
@@ -52,8 +54,7 @@ Route::get('/finanzas', function () {
     return view('finanzas');
 })->name('finanzas');
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+
 
 Route::post('/logout', function (Illuminate\Http\Request $request) {
     Illuminate\Support\Facades\Auth::logout(); 
