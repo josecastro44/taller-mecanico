@@ -34,3 +34,14 @@ Route::get('/recepcion', function () {
 Route::get('/servicios', function () {
     return view('servicios');
 });
+
+use App\Http\Controllers\RepuestoController;
+
+// Ruta para ver la página
+Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
+
+// Ruta para procesar el formulario
+Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
+
+// ESTA ES LA QUE TE FALTA:
+Route::get('/repuestos/reporte', [RepuestoController::class, 'reporte'])->name('repuestos.reporte');
