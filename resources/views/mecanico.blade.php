@@ -5,7 +5,7 @@
     <div class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
             <h2 class="text-2xl font-bold text-[#263A47]">Mi Área de Trabajo</h2>
-            <p class="text-[#728495]">Bienvenido, <span class="font-bold text-[#4A5B6A]">Chema</span>. Aquí tienes tus órdenes asignadas para hoy.</p>
+            <p class="text-[#728495]">Bienvenido, <span class="font-bold text-[#4A5B6A] capitalize">{{ Auth::user()->name }}</span>. Aquí tienes tus órdenes asignadas para hoy.</p>
         </div>
         <button class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 shadow-md transition-all font-medium flex items-center gap-2">
             <i class="ph ph-clock text-xl"></i> Marcar Entrada (Reloj)
