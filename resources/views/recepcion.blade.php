@@ -25,11 +25,11 @@
                 
                 <div>
                     <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Cédula de Identidad (CI) *</label>
-                    <input type="text" name="ci" placeholder="Ej. V-12345678" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]" required>
+                    <input type="number" name="ci" placeholder="Ej. V-12345678" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]" required>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Nombre Completo *</label>
-                    <input type="text" name="nombre" placeholder="Ej. Juan Pérez" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]" required>
+                    <input type="text"  name="nombre"  pattern="[A-Za-z\s]+" placeholder="Ej. Juan Pérez" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]" required>
                 </div>
 
                 <div class="md:col-span-2 text-sm font-bold text-[#4A5B6A] uppercase tracking-wider mt-4 border-b-2 border-[#B4C5D8]/30 pb-1">

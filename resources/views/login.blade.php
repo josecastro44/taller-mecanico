@@ -50,10 +50,10 @@
 
 <form action="/inicio" class="md:w-96 w-80 flex flex-col items-center justify-center">
     
-    <h2 class="text-4xl text-[#263A47] font-medium">Iniciar sesión</h2>
+
     
     <button type="submit" class="mt-8 w-full h-11 rounded-full text-white bg-[#263A47] hover:bg-[#4A5B6A] transition-opacity">
-        Login
+        Iniciar
     </button>
 
 </form>
