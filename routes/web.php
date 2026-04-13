@@ -190,3 +190,7 @@ Route::get('/crear-gerente', function () {
     ]);
     return '¡Usuario Gerente creado con éxito!';
 });
+// Agrégalo dentro del grupo de rutas donde tienes las demás vistas del gerente
+Route::get('/reportes', function () {
+    return view('reportes'); 
+})->name('reportes');
