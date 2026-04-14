@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\RecepcionController;
+use App\Http\Controllers\EmpleadoController; // Pon esto arriba del todo con los otros "use"
+use App\Http\Controllers\ServicioController; // Verifica que esta línea esté arriba
+
 
 // ==========================================
 // RUTAS PÚBLICAS (Cualquier usuario puede verlas)
@@ -12,7 +16,7 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
-use App\Http\Controllers\ServicioController; // Verifica que esta línea esté arriba
+
 
 Route::get('/catalogo', [ServicioController::class, 'index']);
 
@@ -55,13 +59,15 @@ Route::get('/inicio', function () {
 });
 
 // Módulo 1: Recepción (Formulario para registrar clientes y vehículos)
-Route::get('/recepcion', function () {
-    return view('recepcion');
-});
+Route::get('/recepcion', [RecepcionController::class, 'index'])->name('recepcion.index');
+Route::post('/recepcion', [RecepcionController::class, 'guardar'])->name('recepcion.guardar');
 
+
+
+// Módulo de Servicios
 Route::get('/servicios', function () {
     return view('servicios');
-});
+})->name('servicios.index');
 
 // Ruta para la pantalla de Repuestos e Insumos
 Route::get('/repuestos', function () {
@@ -69,9 +75,11 @@ Route::get('/repuestos', function () {
 })->name('repuestos');
 
 
-Route::get('/empleados', function () {
-    return view('empleados');
-})->name('empleados');
+
+
+// Borra la ruta vieja de /empleados y pon estas dos:
+Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
+Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
 
 Route::get('/ventas', function () {
     return view('ventas');

@@ -47,6 +47,7 @@
                 </thead>
                 <tbody class="text-sm text-[#263A47]">
                     
+                    {{-- DATOS ESTÁTICOS DE PRUEBA --}}
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
                         <td class="px-6 py-4 font-medium text-[#728495]">SRV-001</td>
                         <td class="px-6 py-4 font-bold">Cambio de Aceite y Filtros</td>
@@ -98,6 +99,7 @@
         </div>
     </div>
 
+    {{-- MODAL ESTÁTICO (Solo Frontend) --}}
     <div id="modal-nuevo-servicio" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
         
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all">
@@ -145,6 +147,7 @@
                     <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 border border-[#B4C5D8] text-[#728495] font-semibold rounded-lg hover:bg-[#B4C5D8]/20 transition">
                         Cancelar
                     </button>
+                    {{-- Cambiado a type="button" para que no recargue la página y solo cierre el modal --}}
                     <button type="button" onclick="cerrarModal()" class="px-5 py-2.5 bg-[#263A47] text-white font-semibold rounded-lg hover:bg-[#4A5B6A] shadow-md transition">
                         Guardar Servicio
                     </button>
