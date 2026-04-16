@@ -10,19 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
 public function up(): void
-    {
-        Schema::create('repuestos', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre');
-            // Lo que le cuesta al taller comprarlo
-            $table->decimal('costo_adquisicion', 10, 2);
-            // En cuánto se lo venden al cliente
-            $table->decimal('precio_venta', 10, 2);
-            // La cantidad de piezas que tienen físicamente en el taller
-            $table->integer('stock')->default(0); 
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('repuestos', function (Blueprint $table) {
+        $table->id();
+        $table->string('nombre');
+        $table->string('codigo')->nullable(); // Para el SKU: REP-001
+        $table->string('marca')->nullable();  // Bosch, Castrol, etc.
+        $table->string('categoria')->nullable();
+
+        $table->decimal('costo_adquisicion', 10, 2);
+        $table->decimal('precio_venta', 10, 2);
+
+        $table->integer('stock')->default(0);
+        $table->integer('stock_minimo')->default(5); // Para las alertas de "Stock Crítico"
+
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.

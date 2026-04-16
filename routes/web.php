@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\RepuestoController;
 
 // ==========================================
 // RUTAS PÚBLICAS (Cualquier usuario puede verlas)
@@ -33,7 +34,7 @@ Route::post('/login', function (Request $request) {
     // 2. Intentar iniciar sesión de verdad
     if (Auth::attempt($credenciales)) {
         $request->session()->regenerate();
-        
+
         // 3. Si es correcto, lo mandamos al distribuidor de tráfico
         return redirect()->route('dashboard');
     }
@@ -64,9 +65,12 @@ Route::get('/servicios', function () {
 });
 
 // Ruta para la pantalla de Repuestos e Insumos
-Route::get('/repuestos', function () {
-    return view('repuestos');
-})->name('repuestos');
+// Esta dirección cargará la página
+Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
+Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
+
+// Esta dirección procesará el formulario del modal
+Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
 
 
 Route::get('/empleados', function () {
@@ -94,12 +98,12 @@ Route::get('/mecanico', function () {
 })->name('mecanico');
 
 Route::post('/logout', function (Illuminate\Http\Request $request) {
-    Illuminate\Support\Facades\Auth::logout(); 
-    $request->session()->invalidate(); 
-    $request->session()->regenerateToken(); 
+    Illuminate\Support\Facades\Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-    
-    return redirect('/'); 
+
+    return redirect('/');
 })->name('logout');
 
 
@@ -127,7 +131,7 @@ Route::get('/dashboard', function () {
 
 // 1. Ruta del Mecánico (Solo mecánicos)
 Route::get('/mecanico', function () {
-    return view('mecanico'); 
+    return view('mecanico');
 })->middleware(['auth', 'rol:mecanico'])->name('mecanico');
 
 // 2. Ruta del Gerente (Solo gerentes)
@@ -163,12 +167,12 @@ Route::get('/crear-mecanico', function () {
 
 // Ruta del Historial del Mecánico (Solo mecánicos)
 Route::get('/mecanico/historial', function () {
-    return view('mecanico_historial'); 
+    return view('mecanico_historial');
 })->middleware(['auth', 'rol:mecanico']);
 
 // Ruta de Repuestos/Insumos (Solo mecánicos)
 Route::get('/mecanico/insumos', function () {
-    return view('mecanico_insumos'); 
+    return view('mecanico_insumos');
 })->middleware(['auth', 'rol:mecanico']);
 
 // --- RUTA PARA CERRAR SESIÓN CORRECTAMENTE ---
@@ -183,7 +187,7 @@ Route::get('/salir', function () {
 
 Route::get('/crear-gerente', function () {
     \App\Models\User::create([
-        'name' => 'Jose', 
+        'name' => 'Jose',
         'email' => 'gerente@taller.com',
         'password' => bcrypt('123456'),
         'rol' => 'gerente'
