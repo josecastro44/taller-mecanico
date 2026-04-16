@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            // AGREGAMOS LA COLUMNA ROL AQUÍ:
+            $table->string('rol')->default('mecanico'); 
             $table->rememberToken();
             $table->timestamps();
         });
