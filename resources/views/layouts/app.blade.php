@@ -34,7 +34,7 @@
                         <i class="ph ph-package text-xl"></i> <span class="font-medium">Repuestos Solicitados</span>
                     </a>
 
-                {{-- ========================================== --}}
+              {{-- ========================================== --}}
                 {{-- 2. MENÚ PARA EL GERENTE (Tiene TODO) --}}
                 {{-- ========================================== --}}
                 @elseif(Auth::user()->rol === 'gerente')
@@ -44,11 +44,7 @@
                     </a>
 
                     <div class="text-xs font-bold text-[#728495] uppercase tracking-wider mb-2 px-4 mt-4">Supervisión Operativa</div>
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors">
-                        <i class="ph ph-bell-ringing text-xl text-amber-400"></i> 
-                        <span class="font-medium text-amber-400">Aprobar Repuestos</span>
-                        <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full ml-auto animate-pulse">2</span>
-                    </a>
+                    
                     <a href="/mecanico" class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors">
                         <i class="ph ph-users-three text-xl"></i> <span class="font-medium">Ver Taller (Mecánicos)</span>
                     </a>
@@ -63,6 +59,11 @@
                     <a href="/empleados" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-users text-xl"></i><span class="font-medium">Empleados y Nómina</span></a>
                     <a href="/finanzas" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-currency-dollar text-xl"></i><span class="font-medium">Facturación y Finanzas</span></a>
 
+                    {{-- Nueva Sección de Reportes --}}
+                    <div class="text-xs font-bold text-[#728495] uppercase tracking-wider mb-2 px-4 mt-4">Auditoría</div>
+                    <a href="{{ route('reportes') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {{ request()->routeIs('reportes') ? 'bg-[#4A5B6A] text-white' : 'text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white' }}">
+                        <i class="ph ph-file-text text-xl"></i> <span class="font-medium">Reportes</span>
+                    </a>
                 {{-- ========================================== --}}
                 {{-- 3. MENÚ PARA ADMINISTRADOR (Limitado) --}}
                 {{-- ========================================== --}}

@@ -1,33 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Servicio;
 
 use Illuminate\Http\Request;
+use App\Models\Servicio;
 
 class ServicioController extends Controller
 {
-    
     public function index()
     {
-        $servicios = Servicio::all(); // Trae los datos de tu tabla
-        return view('servicios.index', compact('servicios'));
-    }
-    public function calcularPrecio($servicioId, $tipoVehiculo)
-{
-    // Buscamos el servicio en la tabla que ya tienes
-    $servicio = Servicio::find($servicioId);
-    $precio = $servicio->precio_base;
-
-    // Lógica de Variaciones por Categoría
-    if (!$servicio->es_precio_manual) {
-        if ($tipoVehiculo == 'Carga Pesada') {
-            $precio *= 1.5; // Aumento del 50%
-        } elseif ($tipoVehiculo == 'Alta Gama') {
-            $precio *= 1.2; // Aumento del 20%
-        }
+        // 1. Obtener todos los servicios de la base de datos
+        // Usamos paginate para que la tabla no se vuelva infinita
+        $servicios = Servicio::paginate(10); 
+        
+        // 2. Enviar los datos a la vista
+        return view('servicios', compact('servicios'));
     }
 
-    return $precio;
-}
+    public function guardar(Request $request)
+    {
+        // 1. Validar los datos del formulario (Modal)
+        $datos = $request->validate([
+            'codigo'              => 'required|string|unique:servicios',
+            'descripcion'         => 'required|string',
+            'precio_sencillo'     => 'required|numeric|min:0',
+            'precio_alta_gama'    => 'required|numeric|min:0',
+            'precio_carga_pesada' => 'required|numeric|min:0',
+            'categoria'           => 'nullable|string',
+        ]);
+
+        // 2. Guardar en la Base de Datos
+        Servicio::create($datos);
+
+        // 3. Devolver con mensaje de éxito
+        return back()->with('exito', '¡Servicio registrado exitosamente!');
+    }
 }
