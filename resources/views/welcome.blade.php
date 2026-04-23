@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSys - Gestión para Talleres</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Desplazamiento suave para los enlaces del menú */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-white font-sans text-[#263A47] flex flex-col min-h-screen">
+
+    <nav class="bg-[#263A47] text-white py-4 px-8 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-3">
+            <i class="ph ph-wrench text-3xl text-[#98A9BE]"></i>
+            <h1 class="text-2xl font-bold tracking-wider">AutoSys</h1>
+        </div>
+        
+        <div class="hidden md:flex items-center gap-8 font-medium">
+            <a href="#inicio" class="hover:text-[#B4C5D8] transition">Inicio</a>
+            <a href="#nosotros" class="hover:text-[#B4C5D8] transition">Quiénes Somos</a>
+            <a href="#contacto" class="hover:text-[#B4C5D8] transition">Contáctanos</a>
+        </div>
+        
+        <div>
+            <a href="login" class="bg-[#4A5B6A] hover:bg-[#B4C5D8] hover:text-[#263A47] text-white px-6 py-2.5 rounded-lg font-bold transition shadow-sm border border-[#4A5B6A] hover:border-[#B4C5D8] flex items-center gap-2">
+                <i class="ph ph-sign-in text-xl"></i>
+                Iniciar Sesión
+            </a>
+        </div>
+    </nav>
+
+    <section id="inicio" class="bg-[#B4C5D8]/20 flex-1 flex items-center justify-center py-24 px-8 border-b border-[#B4C5D8]/50">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-6xl font-extrabold text-[#263A47] mb-6 leading-tight">
+                Tu Taller Mecánico <span class="text-[#4A5B6A]">Respaldado por Tecnología de Punta</span>
+            </h2>
+            <p class="text-lg md:text-xl text-[#728495] mb-10 max-w-2xl mx-auto">
+                En nuestro taller, la precisión no es opcional. Utilizamos plataformas digitales de última generación para gestionar cada reparación, asegurando que tu vehículo reciba un servicio optimizado, transparente y profesional.
+            </p>
+            <a href="#contacto" class="inline-block bg-[#263A47] text-white px-8 py-4 rounded-lg text-lg font-bold shadow-lg hover:bg-[#4A5B6A] hover:-translate-y-1 transition transform">
+                Agendar Cita
+            </a>
+        </div>
+    </section>
+
+    <section id="nosotros" class="py-24 px-8 bg-white">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1">
+                <h3 class="text-3xl font-bold text-[#263A47] mb-6 border-b-4 border-[#4A5B6A] inline-block pb-2">Quiénes Somos</h3>
+                <p class="text-[#728495] text-lg mb-4 leading-relaxed">
+                   Somos un equipo apasionado por la excelencia automotriz y la innovación. En colaboración con el respaldo tecnológico de <strong>Castro Technology Research</strong>, Enfocarnos en lo que realmente importa: la seguridad de tu auto y tu tranquilidad.
+                </p>
+                <p class="text-[#728495] text-lg leading-relaxed">
+                    Entendemos que valoras tu tiempo. Por eso, integramos procesos operativos y administrativos mediante una interfaz moderna que nos permite entregarte diagnósticos rápidos, presupuestos claros y un seguimiento detallado de tu mantenimiento.
+                </p>
+            </div>
+            <div class="order-1 md:order-2 flex justify-center">
+                <div class="w-full h-80 bg-[#B4C5D8]/30 rounded-3xl flex items-center justify-center border-2 border-[#98A9BE]/50 shadow-inner relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-[#263A47]/10 to-transparent"></div>
+                    <i class="ph ph-users-three text-9xl text-[#4A5B6A]"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="py-24 px-8 bg-[#4A5B6A] text-white relative">
+        <div class="absolute top-0 left-0 w-full overflow-hidden leading-none">
+            <svg class="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" class="fill-white"></path>
+            </svg>
+        </div>
+
+        <div class="max-w-4xl mx-auto text-center mb-12 relative z-10 mt-8">
+            <h3 class="text-3xl font-bold mb-4">Contáctanos</h3>
+            <p class="text-[#B4C5D8] text-lg">¿Tu auto necesita atención profesional? Déjanos tus datos y nos pondremos en contacto para brindarte la asesoría técnica que te mereces.</p>
+        </div>
+        
+        <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-8 md:p-10 text-[#263A47] relative z-10">
+            <form class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-[#728495]">Nombre Completo</label>
+                        <input type="text" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-2 text-[#728495]">Correo Electrónico</label>
+                        <input type="email" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition" placeholder="correo@taller.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-[#728495]">Mensaje</label>
+                    <textarea rows="4" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition resize-none" placeholder="Hola, me gustaría probar la plataforma..."></textarea>
+                </div>
+                <button type="button" class="w-full bg-[#263A47] text-white font-bold py-4 rounded-lg shadow-md hover:bg-[#263A47]/90 transition text-lg flex justify-center items-center gap-2">
+                    <i class="ph ph-paper-plane-right text-xl"></i>
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-[#263A47] text-[#98A9BE] text-center py-8 border-t border-[#4A5B6A]">
+        <div class="flex justify-center gap-6 mb-4">
+            <a href="#" class="hover:text-white transition"><i class="ph ph-facebook-logo text-2xl"></i></a>
+            <a href="#" class="hover:text-white transition"><i class="ph ph-instagram-logo text-2xl"></i></a>
+            <a href="#" class="hover:text-white transition"><i class="ph ph-linkedin-logo text-2xl"></i></a>
+        </div>
+        <p>&copy; 2026 AutoSys. Desarrollado por Castro Technology Research. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>
