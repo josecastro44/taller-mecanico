@@ -132,8 +132,13 @@ Route::get('/crear-mecanico', function () {
 });
 
 Route::get('/crear-gerente', function () {
-    \App\Models\User::create(['name' => 'Jose', 'email' => 'gerente@taller.com', 'password' => bcrypt('123456'), 'rol' => 'gerente']);
-    return '¡Usuario Gerente creado!';
+    $user = \App\Models\User::where('email', 'gerente@taller.com')->first();
+    if($user) {
+        $user->password = bcrypt('admin123'); // Nueva clave: admin123
+        $user->save();
+        return '¡Clave del gerente actualizada a: admin123!';
+    }
+    return 'El gerente no existía, algo raro pasa.';
 });
 
 Route::get('/instalar-db', function () {
