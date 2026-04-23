@@ -135,3 +135,8 @@ Route::get('/crear-gerente', function () {
     \App\Models\User::create(['name' => 'Jose', 'email' => 'gerente@taller.com', 'password' => bcrypt('123456'), 'rol' => 'gerente']);
     return '¡Usuario Gerente creado!';
 });
+
+Route::get('/instalar-db', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+    return '¡Base de datos construida con éxito en la nube!';
+});
