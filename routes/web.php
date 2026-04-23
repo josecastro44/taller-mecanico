@@ -61,7 +61,7 @@ Route::get('/servicios', function () {
 // Módulo: Repuestos (Tus cambios)
 Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
 Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
-/Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
+Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
 
 // Módulo: Empleados
 Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
