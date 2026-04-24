@@ -9,7 +9,10 @@ use App\Http\Controllers\RepuestoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ServicioController;
+<<<<<<< HEAD
 use App\Http\Controllers\VentasController;
+=======
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -69,7 +72,10 @@ Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.
 Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
 
 Route::get('/ventas', function () { return view('ventas'); })->name('ventas');
+<<<<<<< HEAD
 Route::post('/ventas', [VentasController::class, 'store'])->name('ventas.store');
+=======
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
 Route::get('/compras', function () { return view('compras'); })->name('compras');
 Route::get('/proveedores', function () { return view('proveedores'); })->name('proveedores');
 Route::get('/finanzas', function () { return view('finanzas'); })->name('finanzas');
@@ -134,6 +140,21 @@ Route::get('/crear-mecanico', function () {
 });
 
 Route::get('/crear-gerente', function () {
+<<<<<<< HEAD
     \App\Models\User::create(['name' => 'Jose', 'email' => 'gerente@taller.com', 'password' => bcrypt('123456'), 'rol' => 'gerente']);
     return '¡Usuario Gerente creado!';
+=======
+    $user = \App\Models\User::where('email', 'gerente@taller.com')->first();
+    if($user) {
+        $user->password = bcrypt('admin123'); // Nueva clave: admin123
+        $user->save();
+        return '¡Clave del gerente actualizada a: admin123!';
+    }
+    return 'El gerente no existía, algo raro pasa.';
+});
+
+Route::get('/instalar-db', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+    return '¡Base de datos construida con éxito en la nube!';
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
 });

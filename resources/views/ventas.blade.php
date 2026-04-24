@@ -7,7 +7,11 @@
             <h2 class="text-2xl font-bold text-[#263A47]">Gestión de Ventas (Mostrador)</h2>
             <p class="text-[#728495]">Registro de ventas directas de repuestos e insumos al detal</p>
         </div>
+<<<<<<< HEAD
         <button id="btnNuevaVenta" type="button" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
+=======
+        <button class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
             <i class="ph ph-shopping-cart text-xl"></i>
             Nueva Venta
         </button>
@@ -63,7 +67,11 @@
                         <th class="px-6 py-4 font-bold text-center">Acciones</th>
                     </tr>
                 </thead>
+<<<<<<< HEAD
                 <tbody id="ventasTbody" class="text-sm text-[#263A47]">
+=======
+                <tbody class="text-sm text-[#263A47]">
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
                         <td class="px-6 py-4 font-bold">VT-1045</td>
                         <td class="px-6 py-4">Cliente Mostrador</td>
@@ -80,6 +88,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
 @endsection
 
 <!-- Modal Nueva Venta -->
@@ -136,3 +145,6 @@
 </div>
 
 <script src="{{ asset('js/ventas.js') }}"></script>
+=======
+@endsection
+>>>>>>> 156b6413b10d4111281be8189e0193873341bebb
