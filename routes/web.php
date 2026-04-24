@@ -9,6 +9,11 @@ use App\Http\Controllers\RepuestoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\VentaController;
+use App\Http\Controllers\CompraController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\FinanzasController;
+use App\Http\Controllers\MecanicoController; // <-- FIX 1: Controlador agregado
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -54,23 +59,59 @@ Route::get('/recepcion', [RecepcionController::class, 'index'])->name('recepcion
 Route::post('/recepcion', [RecepcionController::class, 'guardar'])->name('recepcion.guardar');
 
 // Módulo: Servicios
-Route::get('/servicios', function () {
-    return view('servicios');
-})->name('servicios.index');
+Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios.index');
+Route::post('/servicios', [ServicioController::class, 'guardar'])->name('servicios.guardar');
+Route::put('/servicios/{id}', [ServicioController::class, 'actualizar'])->name('servicios.actualizar');
+Route::delete('/servicios/{id}', [ServicioController::class, 'eliminar'])->name('servicios.eliminar');
 
 // Módulo: Repuestos (Tus cambios)
 Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
 Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
 Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
+// Reportes de Inventario (PDFs)
+Route::get('/repuestos/imprimir/{id}', [App\Http\Controllers\RepuestoController::class, 'imprimirIndividual'])->name('repuestos.imprimir');
+Route::get('/repuestos/reporte', [App\Http\Controllers\RepuestoController::class, 'imprimirGeneral'])->name('repuestos.reporte');
+
 
 // Módulo: Empleados
 Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
 Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
+Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.actualizar');
+Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.eliminar');
 
-Route::get('/ventas', function () { return view('ventas'); })->name('ventas');
-Route::get('/compras', function () { return view('compras'); })->name('compras');
-Route::get('/proveedores', function () { return view('proveedores'); })->name('proveedores');
-Route::get('/finanzas', function () { return view('finanzas'); })->name('finanzas');
+// Módulo: ventas
+Route::get('/ventas', [VentaController::class, 'index'])->name('ventas');
+Route::post('/ventas', [VentaController::class, 'guardar'])->name('ventas.guardar');
+// Reportes de Ventas
+Route::get('/ventas/imprimir/{id}', [App\Http\Controllers\VentaController::class, 'imprimirTicket'])->name('ventas.imprimir');
+Route::get('/ventas/reporte', [App\Http\Controllers\VentaController::class, 'imprimirReporte'])->name('ventas.reporte');
+
+
+// Módulo: Compras
+Route::get('/compras', [CompraController::class, 'index'])->name('compras');
+Route::post('/compras', [CompraController::class, 'guardar'])->name('compras.guardar');
+Route::post('/compras/{id}/recibir', [CompraController::class, 'marcarRecibido'])->name('compras.recibir');
+
+
+// Módulo: Proveedores
+Route::get('/proveedores', [ProveedorController::class, 'index'])->name('proveedores');
+Route::post('/proveedores', [ProveedorController::class, 'guardar'])->name('proveedores.guardar');
+Route::put('/proveedores/{id}', [ProveedorController::class, 'actualizar'])->name('proveedores.actualizar');
+Route::delete('/proveedores/{id}', [ProveedorController::class, 'eliminar'])->name('proveedores.eliminar');
+
+
+// Módulo: Finanzas
+Route::get('/finanzas', [FinanzasController::class, 'index'])->name('finanzas');
+Route::post('/finanzas/facturar', [FinanzasController::class, 'guardar'])->name('finanzas.guardar');
+Route::get('/finanzas/cobrar/{id}', [App\Http\Controllers\FinanzasController::class, 'prepararCobro'])->name('finanzas.preparar');
+
+// Rutas de Impresión PDF
+Route::get('/finanzas/imprimir/{id}', [App\Http\Controllers\FinanzasController::class, 'imprimirFactura'])->name('finanzas.imprimir');
+Route::get('/finanzas/libro', [App\Http\Controllers\FinanzasController::class, 'imprimirLibro'])->name('finanzas.libro');
+
+// Monitor de Taller
+Route::get('/monitor', [RecepcionController::class, 'monitor'])->name('monitor');
+
 
 // Reportes (Cambio de tu compañero)
 Route::get('/reportes', function () {
@@ -90,9 +131,10 @@ Route::get('/dashboard', function () {
 
 // --- RUTAS PROTEGIDAS POR ROLES ---
 
-Route::get('/mecanico', function () {
-    return view('mecanico');
-})->middleware(['auth', 'rol:mecanico'])->name('mecanico');
+// FIX 2: Ruta del Mecánico combinada (Lógica del Controlador + Protección Middleware)
+Route::get('/mecanico', [MecanicoController::class, 'index'])->middleware(['auth', 'rol:mecanico'])->name('mecanico');
+Route::post('/mecanico/orden/{id}/estado/{estado}', [MecanicoController::class, 'cambiarEstado'])->name('mecanico.estado');
+Route::post('/mecanico/orden/{id}/repuesto', [MecanicoController::class, 'agregarRepuesto'])->name('mecanico.repuesto');
 
 Route::get('/gerente', function () {
     return view('gerente');
@@ -102,14 +144,12 @@ Route::get('/administrador', function () {
     return view('administrador');
 })->middleware(['auth', 'rol:administrador'])->name('administrador');
 
-// Historial e Insumos para Mecánicos
-Route::get('/mecanico/historial', function () {
-    return view('mecanico_historial');
-})->middleware(['auth', 'rol:mecanico']);
 
-Route::get('/mecanico/insumos', function () {
-    return view('mecanico_insumos');
-})->middleware(['auth', 'rol:mecanico']);
+// Historial para Mecánicos
+Route::get('/mecanico/historial', [MecanicoController::class, 'historial'])->middleware(['auth', 'rol:mecanico'])->name('mecanico.historial');
+
+// Historial e Insumos para Mecánicos
+Route::get('/mecanico/insumos', [MecanicoController::class, 'insumos'])->middleware(['auth', 'rol:mecanico'])->name('mecanico.insumos');
 
 
 // --- CIERRE DE SESIÓN ---
@@ -132,13 +172,8 @@ Route::get('/crear-mecanico', function () {
 });
 
 Route::get('/crear-gerente', function () {
-    $user = \App\Models\User::where('email', 'gerente@taller.com')->first();
-    if($user) {
-        $user->password = bcrypt('admin123'); // Nueva clave: admin123
-        $user->save();
-        return '¡Clave del gerente actualizada a: admin123!';
-    }
-    return 'El gerente no existía, algo raro pasa.';
+    \App\Models\User::create(['name' => 'José', 'email' => 'gerente@taller.com', 'password' => bcrypt('123456'), 'rol' => 'gerente']);
+    return '¡Usuario Gerente creado!';
 });
 
 Route::get('/instalar-db', function () {

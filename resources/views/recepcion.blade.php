@@ -84,15 +84,34 @@
             </div>
         </div>
 
-        <div class="bg-[#B4C5D8]/10 rounded-xl border border-[#98A9BE]/50 shadow-sm p-6 flex flex-col justify-between">
+<div class="bg-[#B4C5D8]/10 rounded-xl border border-[#98A9BE]/50 shadow-sm p-6 flex flex-col justify-between">
             <div>
-                <h3 class="text-lg font-bold text-[#263A47] border-b border-[#B4C5D8] pb-3 mb-5">2. Asignación</h3>
+                <h3 class="text-lg font-bold text-[#263A47] border-b border-[#B4C5D8] pb-3 mb-4">2. Asignación y Servicios</h3>
+                
+                {{-- NUEVO: Selección de Servicios --}}
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-[#4A5B6A] mb-2">Servicios a Realizar *</label>
+                    <div class="max-h-40 overflow-y-auto bg-white border border-[#B4C5D8] rounded-lg p-3 space-y-2">
+                        @foreach($servicios as $servicio)
+                            <label class="flex items-center gap-2 cursor-pointer hover:bg-[#B4C5D8]/10 p-1 rounded transition">
+                                <input type="checkbox" name="servicios[]" value="{{ $servicio->id }}" class="w-4 h-4 text-[#263A47] border-[#B4C5D8] rounded focus:ring-[#263A47]">
+                                <span class="text-sm font-medium text-[#263A47]">{{ $servicio->codigo }} - {{ $servicio->descripcion }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('servicios') <span class="text-red-500 text-xs font-semibold mt-1 block">Debe seleccionar al menos un servicio.</span> @enderror
+                </div>
+
+                {{-- CORREGIDO: Mecánico Real desde Empleados --}}
                 <div class="mb-2">
                     <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Mecánico Principal</label>
-                    <select name="mecanico" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 text-[#263A47] bg-white outline-none focus:border-[#263A47]">
-                        <option value="">Pendiente...</option>
-                        <option value="Roberto Carlos">Roberto Carlos (Motor)</option>
-                        <option value="Miguel Gomez">Miguel Gómez (Frenos)</option>
+                    <select name="mecanico_id" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 text-[#263A47] bg-white outline-none focus:border-[#263A47]">
+                        <option value="">Pendiente de asignar...</option>
+                        @foreach($mecanicos as $mecanico)
+                            <option value="{{ $mecanico->id }}" {{ old('mecanico_id') == $mecanico->id ? 'selected' : '' }}>
+                                {{ $mecanico->nombre }} ({{ $mecanico->especialidad }})
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -105,5 +124,7 @@
         </div>
         
     </form>
+
+
 
 @endsection

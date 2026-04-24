@@ -51,6 +51,8 @@
 
                     <div class="text-xs font-bold text-[#728495] uppercase tracking-wider mb-2 px-4 mt-4">Gestión General</div>
                     <a href="/recepcion" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-car-profile text-xl"></i><span class="font-medium">Recepción y O.S.</span></a>
+                    {{-- NUEVO BOTÓN DEL MONITOR --}}
+            <a href="/monitor" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-monitor-play text-xl"></i><span class="font-medium">Monitor de Taller</span></a>
                     <a href="/servicios" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-clipboard-text text-xl"></i><span class="font-medium">Servicios (Mano Obra)</span></a>
                     <a href="/repuestos" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-nut text-xl"></i><span class="font-medium">Inventario / Almacén</span></a>
                     <a href="{{ route('ventas') }}" class="menu-link flex items-center gap-3 px-4 py-3 rounded-lg text-[#B4C5D8] hover:bg-[#4A5B6A] hover:text-white transition-colors"><i class="ph ph-shopping-cart text-xl"></i><span class="font-medium">Ventas</span></a>
