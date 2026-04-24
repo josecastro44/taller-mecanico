@@ -46,9 +46,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify(payload)
             });
 
-            const json = await res.json().catch(() => ({}));
+            // Try to parse JSON; if it fails we'll read text below
+            let json = {};
+            let parsed = false;
+            try {
+                json = await res.clone().json();
+                parsed = true;
+            } catch (err) {
+                parsed = false;
+            }
 
-            if (res.status === 422 && json.errors) {
+            if (res.status === 422 && parsed && json.errors) {
                 // Server validation errors
                 Object.keys(json.errors).forEach(field => {
                     setFieldError(field, json.errors[field].join(' '));
@@ -57,8 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (!res.ok) {
-                console.error('Error al guardar venta', json);
-                alert('Error: revisa los datos e inténtalo de nuevo');
+                // If server returned JSON with message use it, otherwise show plain text
+                let serverMessage = '';
+                if (parsed && json.message) serverMessage = json.message;
+                else {
+                    try { serverMessage = await res.text(); } catch (e) { serverMessage = ''; }
+                }
+                console.error('Error al guardar venta', serverMessage || json);
+                showModalError(serverMessage || 'Error: revisa los datos e inténtalo de nuevo');
                 return;
             }
 

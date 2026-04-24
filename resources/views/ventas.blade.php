@@ -7,11 +7,7 @@
             <h2 class="text-2xl font-bold text-[#263A47]">Gestión de Ventas (Mostrador)</h2>
             <p class="text-[#728495]">Registro de ventas directas de repuestos e insumos al detal</p>
         </div>
-<<<<<<< HEAD
         <button id="btnNuevaVenta" type="button" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
-=======
-        <button class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
->>>>>>> 156b6413b10d4111281be8189e0193873341bebb
             <i class="ph ph-shopping-cart text-xl"></i>
             Nueva Venta
         </button>
@@ -67,11 +63,7 @@
                         <th class="px-6 py-4 font-bold text-center">Acciones</th>
                     </tr>
                 </thead>
-<<<<<<< HEAD
                 <tbody id="ventasTbody" class="text-sm text-[#263A47]">
-=======
-                <tbody class="text-sm text-[#263A47]">
->>>>>>> 156b6413b10d4111281be8189e0193873341bebb
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
                         <td class="px-6 py-4 font-bold">VT-1045</td>
                         <td class="px-6 py-4">Cliente Mostrador</td>
@@ -88,63 +80,63 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-@endsection
-
-<!-- Modal Nueva Venta -->
-<div id="nuevaVentaModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-    <div id="modalBackdrop" class="absolute inset-0 bg-black/50"></div>
-    <div class="relative bg-white rounded-lg shadow-xl w-[95%] max-w-2xl mx-4 z-10 overflow-hidden">
-        <div class="p-4 border-b flex justify-between items-center">
-            <h4 class="font-bold text-lg">Nueva Venta</h4>
-            <button id="closeModal" class="text-[#728495] hover:text-[#263A47]">Cerrar ✕</button>
+    <!-- Modal Nueva Venta -->
+    <div id="nuevaVentaModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div id="modalBackdrop" class="absolute inset-0 bg-black/50"></div>
+        <div class="relative bg-white rounded-lg shadow-xl w-[95%] max-w-2xl mx-4 z-10 overflow-hidden">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h4 class="font-bold text-lg">Nueva Venta</h4>
+                <button id="closeModal" class="text-[#728495] hover:text-[#263A47]">Cerrar ✕</button>
+            </div>
+            <div id="modalErrorBanner" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-2">
+                <strong class="font-medium">Error:</strong>
+                <span id="modalErrorMessage" class="ml-2">Mensaje de error</span>
+            </div>
+            <form id="formNuevaVenta" class="p-4 space-y-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-sm text-[#728495]">N° Ticket</label>
+                        <input id="ticket" name="ticket" type="text" required class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
+                        <span data-error-for="ticket" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[#728495]">Cliente</label>
+                        <input id="cliente" name="cliente" type="text" required class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
+                        <span data-error-for="cliente" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-sm text-[#728495]">Artículo</label>
+                        <input id="articulo" name="articulo" type="text" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
+                        <span data-error-for="articulo" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[#728495]">Total</label>
+                        <input id="total" name="total" type="number" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
+                        <span data-error-for="total" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[#728495]">Método</label>
+                        <select id="metodo" name="metodo" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
+                            <option value="efectivo">Efectivo</option>
+                            <option value="tarjeta">Tarjeta</option>
+                            <option value="transferencia">Transferencia</option>
+                        </select>
+                        <span data-error-for="metodo" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-sm text-[#728495]">Acciones / Observaciones</label>
+                        <textarea id="acciones" name="acciones" rows="3" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none"></textarea>
+                        <span data-error-for="acciones" class="text-red-600 text-sm mt-1 hidden"></span>
+                    </div>
+                </div>
+                <div class="pt-3 flex justify-end gap-2 border-t">
+                    <button type="button" id="cancelBtn" class="px-4 py-2 rounded bg-gray-200">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 rounded bg-[#263A47] text-white">Guardar Venta</button>
+                </div>
+            </form>
         </div>
-        <form id="formNuevaVenta" class="p-4 space-y-3">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                    <label class="text-sm text-[#728495]">N° Ticket</label>
-                    <input id="ticket" name="ticket" type="text" required class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
-                    <span data-error-for="ticket" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-                <div>
-                    <label class="text-sm text-[#728495]">Cliente</label>
-                    <input id="cliente" name="cliente" type="text" required class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
-                    <span data-error-for="cliente" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="text-sm text-[#728495]">Artículo</label>
-                    <input id="articulo" name="articulo" type="text" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
-                    <span data-error-for="articulo" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-                <div>
-                    <label class="text-sm text-[#728495]">Total</label>
-                    <input id="total" name="total" type="number" step="0.01" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
-                    <span data-error-for="total" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-                <div>
-                    <label class="text-sm text-[#728495]">Método</label>
-                    <select id="metodo" name="metodo" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none">
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                        <option value="transferencia">Transferencia</option>
-                    </select>
-                    <span data-error-for="metodo" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="text-sm text-[#728495]">Acciones / Observaciones</label>
-                    <textarea id="acciones" name="acciones" rows="3" class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none"></textarea>
-                    <span data-error-for="acciones" class="text-red-600 text-sm mt-1 hidden"></span>
-                </div>
-            </div>
-            <div class="pt-3 flex justify-end gap-2 border-t">
-                <button type="button" id="cancelBtn" class="px-4 py-2 rounded bg-gray-200">Cancelar</button>
-                <button type="submit" class="px-4 py-2 rounded bg-[#263A47] text-white">Guardar Venta</button>
-            </div>
-        </form>
     </div>
-</div>
 
-<script src="{{ asset('js/ventas.js') }}"></script>
-=======
+    <script src="{{ asset('js/ventas.js') }}"></script>
+
 @endsection
->>>>>>> 156b6413b10d4111281be8189e0193873341bebb
