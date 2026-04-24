@@ -10,6 +10,7 @@ use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\VentasController;
+use App\Http\Controllers\ComprasController;
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -71,6 +72,7 @@ Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('emplead
 Route::get('/ventas', function () { return view('ventas'); })->name('ventas');
 Route::post('/ventas', [VentasController::class, 'store'])->name('ventas.store');
 Route::get('/compras', function () { return view('compras'); })->name('compras');
+Route::post('/compras', [ComprasController::class, 'store'])->name('compras.store');
 Route::get('/proveedores', function () { return view('proveedores'); })->name('proveedores');
 Route::get('/finanzas', function () { return view('finanzas'); })->name('finanzas');
 
