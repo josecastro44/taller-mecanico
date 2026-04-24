@@ -9,6 +9,7 @@ use App\Http\Controllers\RepuestoController;
 use App\Http\Controllers\RecepcionController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\VentasController;
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -61,13 +62,14 @@ Route::get('/servicios', function () {
 // Módulo: Repuestos (Tus cambios)
 Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
 Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
-/Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
+Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
 
 // Módulo: Empleados
 Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
 Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
 
 Route::get('/ventas', function () { return view('ventas'); })->name('ventas');
+Route::post('/ventas', [VentasController::class, 'store'])->name('ventas.store');
 Route::get('/compras', function () { return view('compras'); })->name('compras');
 Route::get('/proveedores', function () { return view('proveedores'); })->name('proveedores');
 Route::get('/finanzas', function () { return view('finanzas'); })->name('finanzas');
