@@ -22,7 +22,7 @@ class CheckRole
         }
 
         // 3. Verificación normal para los demás (mecanico, administrador)
-        if (Auth::user()->rol !== $rol) {
+        if (strtolower(Auth::user()->rol) !== strtolower($rol)) {
             abort(403, 'ACCESO DENEGADO. NO TIENES EL ROL NECESARIO PARA ENTRAR AQUÍ.');
         }
 

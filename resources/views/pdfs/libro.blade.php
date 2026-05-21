@@ -27,8 +27,6 @@
                 <th>REFERENCIA</th>
                 <th>MANO DE OBRA</th>
                 <th>REPUESTOS</th>
-                <th>IVA (16%)</th>
-                <th>IGTF (3%)</th>
                 <th>TOTAL FAC.</th>
             </tr>
         </thead>
@@ -40,8 +38,6 @@
                 <td>{{ $fac->referencia }}</td>
                 <td>$ {{ number_format($fac->subtotal_mano_obra, 2) }}</td>
                 <td>$ {{ number_format($fac->subtotal_repuestos, 2) }}</td>
-                <td>$ {{ number_format($fac->monto_iva, 2) }}</td>
-                <td>$ {{ number_format($fac->monto_igtf, 2) }}</td>
                 <td><strong>$ {{ number_format($fac->total_facturado, 2) }}</strong></td>
             </tr>
             @endforeach
@@ -49,8 +45,6 @@
     </table>
 
     <div class="totales">
-        <p>Total IVA Recaudado: $ {{ number_format($totalIva, 2) }}</p>
-        <p>Total IGTF Recaudado: $ {{ number_format($totalIgtf, 2) }}</p>
         <p style="font-size: 18px;">INGRESOS TOTALES DEL MES: $ {{ number_format($ingresosBrutos, 2) }}</p>
     </div>
 

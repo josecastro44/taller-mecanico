@@ -88,6 +88,17 @@
             <div>
                 <h3 class="text-lg font-bold text-[#263A47] border-b border-[#B4C5D8] pb-3 mb-4">2. Asignación y Servicios</h3>
                 
+                {{-- NUEVO: Selección de Tipo de Vehículo para Precios --}}
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Tipo de Vehículo (Determina Precio) *</label>
+                    <select name="tipo_vehiculo" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 text-[#263A47] bg-white outline-none focus:border-[#263A47]" required>
+                        <option value="sencillo">Sencillo / Estándar</option>
+                        <option value="alta_gama">Alta Gama / Lujo</option>
+                        <option value="carga_pesada">Carga Pesada / Camioneta</option>
+                    </select>
+                    @error('tipo_vehiculo') <span class="text-red-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
+                </div>
+
                 {{-- NUEVO: Selección de Servicios --}}
                 <div class="mb-5">
                     <label class="block text-sm font-semibold text-[#4A5B6A] mb-2">Servicios a Realizar *</label>

@@ -23,28 +23,27 @@ class CompraController extends Controller
         // 2. Traer Compras y Repuestos
         $compras = Compra::with('proveedor')->orderBy('created_at', 'desc')->paginate(10);
         $repuestos = Repuesto::all(); // Todos los repuestos, para poder comprar
+        $proveedores = Proveedor::all();
 
-        return view('compras', compact('compras', 'inversionMes', 'pedidosTransito', 'cuentasPorPagar', 'repuestos'));
+        return view('compras', compact('compras', 'inversionMes', 'pedidosTransito', 'cuentasPorPagar', 'repuestos', 'proveedores'));
     }
 
     public function guardar(Request $request)
     {
         $request->validate([
-            'proveedor' => 'required|string',
+            'proveedor_id' => 'required|exists:proveedores,id',
             'repuesto_id' => 'required|exists:repuestos,id',
             'cantidad' => 'required|integer|min:1',
             'costo_unitario' => 'required|numeric|min:0',
             'estado' => 'required|string'
         ]);
 
-        // Guardar o buscar al proveedor mágicamente
-        $proveedor = Proveedor::firstOrCreate(['nombre' => $request->proveedor]);
         $subtotal = $request->cantidad * $request->costo_unitario;
 
         // Crear la Orden Principal
         $compra = Compra::create([
             'numero_orden' => 'OC-' . date('Y') . '-' . rand(100, 999),
-            'proveedor_id' => $proveedor->id,
+            'proveedor_id' => $request->proveedor_id,
             'total' => $subtotal,
             'estado' => $request->estado
         ]);

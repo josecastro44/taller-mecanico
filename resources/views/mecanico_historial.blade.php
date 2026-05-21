@@ -106,9 +106,9 @@
     {{-- MODALES DINÁMICOS (Uno por cada orden) --}}
     @foreach($historial as $orden)
     <div id="modal-historial-{{ $orden->id }}" class="hidden fixed inset-0 bg-[#263A47]/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4" onclick="closeModal('modal-historial-{{ $orden->id }}')">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
             
-            <div class="bg-green-600 p-6 text-white flex justify-between items-start">
+            <div class="bg-green-600 p-6 text-white flex justify-between items-start shrink-0">
                 <div>
                     <span class="bg-green-800/50 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">Trabajo {{ $orden->estado }}</span>
                     <h3 class="text-2xl font-black">O.S. 00{{ $orden->id }}</h3>
@@ -119,7 +119,7 @@
                 </button>
             </div>
             
-            <div class="p-6 space-y-5">
+            <div class="p-6 space-y-5 overflow-y-auto overflow-x-hidden">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
                         <p class="text-xs text-[#98A9BE] uppercase font-bold mb-1">Vehículo</p>

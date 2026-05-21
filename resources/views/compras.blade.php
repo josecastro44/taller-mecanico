@@ -93,17 +93,22 @@
 
     {{-- MODAL NUEVA COMPRA --}}
     <div id="modal-compra" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10 shrink-0">
                 <h3 class="text-lg font-bold text-[#263A47]">Registrar Nueva Compra</h3>
                 <button onclick="cerrarModalCompra()" class="text-[#728495] hover:text-red-500"><i class="ph ph-x text-2xl"></i></button>
             </div>
-            <form action="{{ route('compras.guardar') }}" method="POST" class="p-6">
+            <form action="{{ route('compras.guardar') }}" method="POST" class="p-6 overflow-y-auto overflow-x-hidden" onsubmit="return confirm('¿Confirma que los datos de la requisición son correctos?');">
                 @csrf
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Nombre del Proveedor *</label>
-                        <input type="text" name="proveedor" required placeholder="Ej. Autopartes Venezuela C.A." class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Proveedor *</label>
+                        <select name="proveedor_id" required class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
+                            <option value="">Seleccione el proveedor...</option>
+                            @foreach($proveedores as $prov)
+                                <option value="{{ $prov->id }}">{{ $prov->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Repuesto a Comprar *</label>

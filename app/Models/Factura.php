@@ -10,11 +10,58 @@ class Factura extends Model
     protected $fillable = [
         'numero_factura',
         'referencia',
+        'orden_servicio_id',
         'subtotal_repuestos',
         'subtotal_mano_obra',
         'base_imponible',
-        'monto_iva',
-        'monto_igtf',
-        'total_facturado'
+        'total_facturado',
+        'total_pagado',
+        'saldo_pendiente',
+        'estado_pago'
     ];
+
+    /**
+     * Relación: Una factura pertenece a una Orden de Servicio
+     */
+    public function ordenServicio()
+    {
+        return $this->belongsTo(\App\Models\OrdenServicio::class);
+    }
+
+    /**
+     * Relación: Una factura tiene muchos pagos/abonos
+     */
+    public function pagos()
+    {
+        return $this->hasMany(\App\Models\Pago::class);
+    }
+
+    /**
+     * ¿Está completamente pagada?
+     */
+    public function estaPagada()
+    {
+        return $this->estado_pago === 'Pagado';
+    }
+
+    /**
+     * Recalcula los totales de pago basándose en los abonos registrados
+     */
+    public function recalcularSaldo()
+    {
+        $totalPagado = $this->pagos()->sum('monto');
+        $this->total_pagado = $totalPagado;
+        $this->saldo_pendiente = max(0, $this->total_facturado - $totalPagado);
+
+        if ($totalPagado <= 0) {
+            $this->estado_pago = 'Pendiente';
+        } elseif ($totalPagado >= $this->total_facturado) {
+            $this->estado_pago = 'Pagado';
+            $this->saldo_pendiente = 0;
+        } else {
+            $this->estado_pago = 'Parcial';
+        }
+
+        $this->save();
+    }
 }

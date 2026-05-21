@@ -6,38 +6,37 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Vehiculo;
 use App\Models\OrdenServicio;
-use App\Models\Empleado; // <-- Ahora leemos de Empleados
-use App\Models\Servicio; // <-- Traemos los servicios
+use App\Models\Empleado;
+use App\Models\Servicio;
 
 class RecepcionController extends Controller
 {
-public function index()
+    public function index()
     {
-        // Traemos los datos para el formulario de arriba
-        $servicios = \App\Models\Servicio::all();
-        $mecanicos = \App\Models\Empleado::where('especialidad', '!=', 'Recepcionista / Administrativo')->get();
+        $servicios = Servicio::all();
+        $mecanicos = Empleado::where('especialidad', '!=', 'Recepcionista / Administrativo')->get();
         
-        // Traemos TODAS las órdenes para el Monitor de Taller abajo
-        $ordenes = \App\Models\OrdenServicio::with(['vehiculo', 'mecanico'])
+        $ordenes = OrdenServicio::with(['vehiculo', 'mecanico'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
         return view('recepcion', compact('servicios', 'mecanicos', 'ordenes'));
     }
 
-public function guardar(Request $request)
+    public function guardar(Request $request)
     {
         $datosValidados = $request->validate([
-            'cedula'      => 'required|min:7|max:10',
-            'nombre'      => 'required|string|max:100',
-            'telefono'    => 'required|min:10',
-            'placa'       => 'required|string|min:6|max:8',
-            'marca'       => 'required|string',
-            'modelo'      => 'required|string',
-            'diagnostico' => 'required|min:10',
-            'mecanico_id' => 'nullable|exists:empleados,id',
-            'servicios'   => 'required|array', 
-            'servicios.*' => 'exists:servicios,id'
+            'cedula'        => 'required|min:7|max:10',
+            'nombre'        => 'required|string|max:100',
+            'telefono'      => 'required|min:10',
+            'placa'         => 'required|string|min:6|max:8',
+            'marca'         => 'required|string',
+            'modelo'        => 'required|string',
+            'diagnostico'   => 'required|min:10',
+            'mecanico_id'   => 'nullable|exists:empleados,id',
+            'servicios'     => 'required|array', 
+            'servicios.*'   => 'exists:servicios,id',
+            'tipo_vehiculo' => 'required|in:sencillo,alta_gama,carga_pesada',
         ]);
 
         $cliente = Cliente::firstOrCreate(
@@ -61,19 +60,25 @@ public function guardar(Request $request)
             'mecanico_id' => $datosValidados['mecanico_id'], 
             'diagnostico' => $datosValidados['diagnostico'],
             'estado'      => 'En Espera',
-            'prioridad'   => 'Normal' 
+            'prioridad'   => 'Normal',
+            'fecha_recepcion' => now()
         ]);
 
-        // EL FIX: Buscamos los servicios seleccionados y armamos el arreglo con sus precios congelados
+        // FIX: Seleccionar el precio correcto según tipo de vehículo
+        $tipoVehiculo = $datosValidados['tipo_vehiculo'];
         $serviciosSeleccionados = Servicio::whereIn('id', $request->servicios)->get();
         $datosPivote = [];
         
         foreach ($serviciosSeleccionados as $servicio) {
-            // 'precio_cobrado' guardará el precio que tiene el servicio HOY
-            $datosPivote[$servicio->id] = ['precio_cobrado' => $servicio->precio ?? 0]; 
+            // Mapear tipo de vehículo al campo de precio correspondiente
+            $precio = match($tipoVehiculo) {
+                'alta_gama'     => $servicio->precio_alta_gama,
+                'carga_pesada'  => $servicio->precio_carga_pesada,
+                default         => $servicio->precio_sencillo,
+            };
+            $datosPivote[$servicio->id] = ['precio_cobrado' => $precio]; 
         }
 
-        // Guardamos todo en la tabla pivote de un solo golpe
         $orden->servicios()->attach($datosPivote);
 
         return back()->with('exito', '¡La orden de servicio fue creada y vinculada correctamente!');
@@ -81,8 +86,7 @@ public function guardar(Request $request)
 
     public function monitor()
     {
-        // Traemos TODAS las órdenes para el Monitor de Taller
-        $ordenes = \App\Models\OrdenServicio::with(['vehiculo', 'mecanico'])
+        $ordenes = OrdenServicio::with(['vehiculo', 'mecanico'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 

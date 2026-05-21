@@ -11,7 +11,13 @@ class Empleado extends Model
         'cedula', 
         'telefono', 
         'especialidad', 
-        'sueldo_base', // <-- Permiso concedido
-        'comision'
+        'sueldo_base',
+        'comision',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

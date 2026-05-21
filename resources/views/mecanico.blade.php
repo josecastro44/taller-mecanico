@@ -140,12 +140,12 @@
 
     {{-- MODAL PEDIR INSUMOS --}}
     <div id="modal-insumos" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10 shrink-0">
                 <h3 class="text-lg font-bold text-[#263A47]">Agregar Repuesto al Vehículo</h3>
                 <button onclick="cerrarModalInsumos()" class="text-[#728495] hover:text-red-500"><i class="ph ph-x text-2xl"></i></button>
             </div>
-            <form id="form-insumos" method="POST" class="p-6">
+            <form id="form-insumos" method="POST" class="p-6 overflow-y-auto overflow-x-hidden">
                 @csrf
                 <div class="space-y-4">
                     <div>

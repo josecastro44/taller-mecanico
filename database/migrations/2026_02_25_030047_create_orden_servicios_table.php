@@ -22,21 +22,8 @@ public function up(): void
             $table->text('diagnostico')->nullable(); // Puede estar vacío hasta que el mecánico lo revise
             $table->string('prioridad')->default('Normal'); // Alta, Normal, Baja
             
-            // BORRA EL ENUM Y PON ESTA LÍNEA:
+            // Estado de la orden
             $table->string('estado', 30)->default('En Espera');
-
-            // Totales de facturación (se llenarán al final)
-            $table->decimal('total_mano_obra', 10, 2)->default(0);
-            
-        
-            // El flujo de estados que pidió tu profesora
-            $table->enum('estado', [
-                'En Espera', 
-                'En Reparación', 
-                'Esperando Repuestos', 
-                'Finalizado', 
-                'Entregado'
-            ])->default('En Espera');
 
             // Totales de facturación (se llenarán al final)
             $table->decimal('total_mano_obra', 10, 2)->default(0);

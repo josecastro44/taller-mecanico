@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Factura;
+use App\Models\Pago;
 use App\Models\Empleado; 
 use App\Models\OrdenServicio;
+use App\Services\BcvService;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -14,14 +16,28 @@ class FinanzasController extends Controller
 {
     public function index()
     {
-        $facturas = Factura::orderBy('created_at', 'desc')->paginate(10);
+        $facturas = Factura::with('pagos')->orderBy('created_at', 'desc')->paginate(10);
         $inicioMes = Carbon::now()->startOfMonth();
 
         $ingresosBrutos = Factura::where('created_at', '>=', $inicioMes)->sum('total_facturado');
+        $ingresosBrutosBs = Pago::where('created_at', '>=', $inicioMes)->get()->sum(function($p) {
+            return $p->monto * $p->tasa_bcv;
+        });
+
         $egresosTotales = Empleado::sum('sueldo_base');
         $utilidadNeta = $ingresosBrutos - $egresosTotales;
 
-        return view('finanzas', compact('facturas', 'ingresosBrutos', 'egresosTotales', 'utilidadNeta'));
+        // Nuevas métricas
+        $totalPendiente = Factura::where('estado_pago', '!=', 'Pagado')->sum('saldo_pendiente');
+        $facturasPendientes = Factura::where('estado_pago', '!=', 'Pagado')->count();
+
+        // Tasa BCV
+        $tasaBcv = BcvService::obtenerTasa();
+
+        return view('finanzas', compact(
+            'facturas', 'ingresosBrutos', 'ingresosBrutosBs', 'egresosTotales', 'utilidadNeta',
+            'totalPendiente', 'facturasPendientes', 'tasaBcv'
+        ));
     }
 
     // NUEVA FUNCIÓN: Calcula todo automáticamente al darle clic en el Monitor
@@ -63,23 +79,22 @@ class FinanzasController extends Controller
         $subtotalManoObra  = $request->subtotal_mano_obra;
         $baseImponible     = $subtotalRepuestos + $subtotalManoObra;
         
-        $montoIva  = $baseImponible * 0.16; 
-        $montoIgtf = $request->has('aplica_igtf') ? ($baseImponible * 0.03) : 0; 
-        $totalFacturado = $baseImponible + $montoIva + $montoIgtf;
+        $totalFacturado = $baseImponible;
 
         $ultimoRegistro = Factura::latest('id')->first();
         $siguienteId = $ultimoRegistro ? $ultimoRegistro->id + 1 : 1;
         $numeroFactura = 'FAC-' . str_pad($siguienteId, 5, '0', STR_PAD_LEFT);
 
-        Factura::create([
+        $factura = Factura::create([
             'numero_factura'     => $numeroFactura,
             'referencia'         => $request->referencia,
+            'orden_servicio_id'  => $request->orden_id,
             'subtotal_repuestos' => $subtotalRepuestos,
             'subtotal_mano_obra' => $subtotalManoObra,
             'base_imponible'     => $baseImponible,
-            'monto_iva'          => $montoIva,
-            'monto_igtf'         => $montoIgtf,
-            'total_facturado'    => $totalFacturado
+            'total_facturado'    => $totalFacturado,
+            'saldo_pendiente'    => $totalFacturado,
+            'estado_pago'        => 'Pendiente'
         ]);
 
         // FIX MAGNÍFICO: Si la factura viene de una Orden, marcamos el carro como ENTREGADO
@@ -87,6 +102,7 @@ class FinanzasController extends Controller
             $orden = OrdenServicio::find($request->orden_id);
             if ($orden) {
                 $orden->estado = 'Entregado';
+                $orden->fecha_entregado = now();
                 $orden->save();
             }
         }
@@ -94,19 +110,69 @@ class FinanzasController extends Controller
         return back()->with('exito', '¡Factura ' . $numeroFactura . ' generada! Vehículo marcado como Entregado.');
     }
 
-    public function imprimirFactura($id)
-{
-    $factura = Factura::findOrFail($id);
-    
-    // Aquí podrías buscar también los datos de la Orden si quieres detallar los repuestos
-    // Por ahora, generamos la legal con los montos que ya tenemos
-    $pdf = Pdf::loadView('pdfs.factura', compact('factura'));
-    
-    // Esto hace que el PDF se abra en una pestaña nueva
-    return $pdf->stream('Factura_'.$factura->numero_factura.'.pdf');
-}
+    /**
+     * Registrar un pago/abono a una factura
+     */
+    public function registrarPago(Request $request)
+    {
+        $request->validate([
+            'factura_id'      => 'required|exists:facturas,id',
+            'monto'           => 'required|numeric|min:0.01',
+            'metodo_pago'     => 'required|string',
+            'referencia_pago' => 'nullable|string|max:100',
+        ]);
 
-public function imprimirLibro()
+        $factura = Factura::findOrFail($request->factura_id);
+
+        // Obtener tasa BCV actual
+        $tasaBcv = BcvService::obtenerTasa();
+
+        Pago::create([
+            'factura_id'      => $factura->id,
+            'monto'           => $request->monto,
+            'metodo_pago'     => $request->metodo_pago,
+            'referencia_pago' => $request->referencia_pago,
+            'tasa_bcv'        => $tasaBcv['precio'],
+            'observacion'     => $request->observacion,
+        ]);
+
+        // Recalcular saldos
+        $factura->recalcularSaldo();
+
+        return back()->with('exito', '¡Pago de $' . number_format($request->monto, 2) . ' registrado exitosamente!');
+    }
+
+    /**
+     * API: Obtener tasa BCV actual (para AJAX)
+     */
+    public function consultarTasa()
+    {
+        $tasa = BcvService::obtenerTasa();
+        return response()->json($tasa);
+    }
+
+    /**
+     * API: Refrescar tasa BCV (borra caché)
+     */
+    public function refrescarTasa()
+    {
+        $tasa = BcvService::refrescarTasa();
+        return response()->json($tasa);
+    }
+
+    public function imprimirFactura($id)
+    {
+        $factura = Factura::with('pagos')->findOrFail($id);
+        
+        // Aquí podrías buscar también los datos de la Orden si quieres detallar los repuestos
+        // Por ahora, generamos la legal con los montos que ya tenemos
+        $pdf = Pdf::loadView('pdfs.factura', compact('factura'));
+        
+        // Esto hace que el PDF se abra en una pestaña nueva
+        return $pdf->stream('Factura_'.$factura->numero_factura.'.pdf');
+    }
+
+    public function imprimirLibro()
     {
         $inicioMes = Carbon::now()->startOfMonth();
         
@@ -115,11 +181,9 @@ public function imprimirLibro()
         
         // Calculamos los totales para el pie de página del reporte
         $ingresosBrutos = $facturas->sum('total_facturado');
-        $totalIva = $facturas->sum('monto_iva');
-        $totalIgtf = $facturas->sum('monto_igtf');
         $mes = Carbon::now()->isoFormat('MMMM YYYY');
 
-        $pdf = Pdf::loadView('pdfs.libro', compact('facturas', 'ingresosBrutos', 'totalIva', 'totalIgtf', 'mes'));
+        $pdf = Pdf::loadView('pdfs.libro', compact('facturas', 'ingresosBrutos', 'mes'));
         
         // Orientación horizontal (landscape) porque es una tabla ancha
         $pdf->setPaper('A4', 'landscape');

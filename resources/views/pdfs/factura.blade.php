@@ -50,10 +50,6 @@
 
     <div class="totales">
         <div class="fila-total">Subtotal: <span style="float:right">$ {{ number_format($factura->base_imponible, 2) }}</span></div>
-        <div class="fila-total">IVA (16%): <span style="float:right">$ {{ number_format($factura->monto_iva, 2) }}</span></div>
-        @if($factura->monto_igtf > 0)
-            <div class="fila-total">IGTF (3%): <span style="float:right">$ {{ number_format($factura->monto_igtf, 2) }}</span></div>
-        @endif
         <div class="total-final">TOTAL A PAGAR: <span style="float:right">$ {{ number_format($factura->total_facturado, 2) }}</span></div>
     </div>
 

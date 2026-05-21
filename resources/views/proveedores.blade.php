@@ -98,13 +98,13 @@
 
     {{-- MODAL DINÁMICO (Crear / Editar) --}}
     <div id="modal-proveedor" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
-            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="px-6 py-4 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10 shrink-0">
                 <h3 id="modal-titulo" class="text-lg font-bold text-[#263A47]">Registrar Proveedor</h3>
                 <button onclick="cerrarModal()" class="text-[#728495] hover:text-red-500 transition"><i class="ph ph-x text-2xl"></i></button>
             </div>
             
-            <form id="formulario-proveedor" method="POST" class="p-6">
+            <form id="formulario-proveedor" method="POST" class="p-6 overflow-y-auto overflow-x-hidden">
                 @csrf
                 <input type="hidden" name="_method" id="metodo-formulario" value="POST">
                 

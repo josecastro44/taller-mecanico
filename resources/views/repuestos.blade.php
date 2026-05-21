@@ -137,8 +137,8 @@
 
                     {{-- Modal Editar --}}
                     <div id="modal-editar-{{ $repuesto->id }}" class="hidden fixed inset-0 bg-[#0F172A]/40 z-[60] flex items-center justify-center backdrop-blur-sm p-4 transition-all duration-300">
-                        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden border border-[#E2E8F0]">
-                            <div class="px-8 py-5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex justify-between items-center">
+                        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl border border-[#E2E8F0] flex flex-col max-h-[90vh]">
+                            <div class="px-8 py-5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex justify-between items-center shrink-0">
                                 <h3 class="text-xl font-extrabold text-[#1E293B] flex items-center gap-2">
                                     <i class="ph ph-pencil-line text-emerald-600"></i>
                                     Actualizar Repuesto
@@ -147,7 +147,8 @@
                                     <i class="ph ph-x text-2xl"></i>
                                 </button>
                             </div>
-                            <form action="{{ route('repuestos.update', $repuesto->id) }}" method="POST" class="p-8 space-y-5">
+                            <div class="overflow-y-auto overflow-x-hidden p-8">
+                                <form action="{{ route('repuestos.update', $repuesto->id) }}" method="POST" class="space-y-5">
                                 @csrf
                                 @method('PUT')
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -204,6 +205,7 @@
                                     <button type="submit" class="bg-[#1E293B] text-white px-8 py-2.5 rounded-xl font-bold shadow-lg hover:bg-[#334155] transition-all">Actualizar Registro</button>
                                 </div>
                             </form>
+                            </div>
                         </div>
                     </div>
                     @empty
@@ -224,8 +226,8 @@
 
     {{-- MODAL REGISTRAR NUEVO --}}
     <div id="modal-repuesto" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden transform transition-all border border-[#B4C5D8]">
-            <div class="px-8 py-5 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all border border-[#B4C5D8]">
+            <div class="px-8 py-5 border-b border-[#B4C5D8] flex justify-between items-center bg-[#B4C5D8]/10 shrink-0">
                 <h3 class="text-xl font-bold text-[#263A47] flex items-center gap-2">
                     <i class="ph ph-plus-circle text-blue-600"></i>
                     Nuevo Ingreso a Inventario
@@ -234,7 +236,7 @@
                     <i class="ph ph-x text-2xl"></i>
                 </button>
             </div>
-            <form action="{{ route('repuestos.store') }}" method="POST" class="p-8 space-y-5">
+            <form action="{{ route('repuestos.store') }}" method="POST" class="p-8 space-y-5 overflow-y-auto overflow-x-hidden">
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="md:col-span-2">

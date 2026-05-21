@@ -13,7 +13,9 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\FinanzasController;
-use App\Http\Controllers\MecanicoController; // <-- FIX 1: Controlador agregado
+use App\Http\Controllers\MecanicoController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReporteController;
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -50,78 +52,84 @@ Route::post('/login', function (Request $request) {
 // RUTAS DEL SISTEMA (Módulos Internos)
 // ==========================================
 
-Route::get('/inicio', function () {
-    return view('inicio');
+Route::middleware('auth')->group(function () {
+    // Dashboard Interactivo (reemplaza /inicio estático)
+    Route::get('/inicio', [DashboardController::class, 'index'])->name('inicio');
+
+    // API endpoints para el dashboard (polling AJAX)
+    Route::get('/api/dashboard/ordenes', [DashboardController::class, 'ordenes']);
+    Route::get('/api/dashboard/stats', [DashboardController::class, 'stats']);
+    Route::get('/api/dashboard/notificaciones', [DashboardController::class, 'notificaciones']);
+
+    // Módulo: Recepción
+    Route::get('/recepcion', [RecepcionController::class, 'index'])->name('recepcion.index');
+    Route::post('/recepcion', [RecepcionController::class, 'guardar'])->name('recepcion.guardar');
+
+    // Módulo: Servicios
+    Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios.index');
+    Route::post('/servicios', [ServicioController::class, 'guardar'])->name('servicios.guardar');
+    Route::put('/servicios/{id}', [ServicioController::class, 'actualizar'])->name('servicios.actualizar');
+    Route::delete('/servicios/{id}', [ServicioController::class, 'eliminar'])->name('servicios.eliminar');
+
+    // Módulo: Repuestos (Tus cambios)
+    Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
+    Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
+    Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
+    // Reportes de Inventario (PDFs)
+    Route::get('/repuestos/imprimir/{id}', [App\Http\Controllers\RepuestoController::class, 'imprimirIndividual'])->name('repuestos.imprimir');
+    Route::get('/repuestos/reporte', [App\Http\Controllers\RepuestoController::class, 'imprimirGeneral'])->name('repuestos.reporte');
+
+    // Módulo: Empleados
+    Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
+    Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
+    Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.actualizar');
+    Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.eliminar');
+
+    // Módulo: ventas
+    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas');
+    Route::post('/ventas', [VentaController::class, 'guardar'])->name('ventas.guardar');
+    // Reportes de Ventas
+    Route::get('/ventas/imprimir/{id}', [App\Http\Controllers\VentaController::class, 'imprimirTicket'])->name('ventas.imprimir');
+    Route::get('/ventas/reporte', [App\Http\Controllers\VentaController::class, 'imprimirReporte'])->name('ventas.reporte');
+
+    // Módulo: Compras
+    Route::get('/compras', [CompraController::class, 'index'])->name('compras');
+    Route::post('/compras', [CompraController::class, 'guardar'])->name('compras.guardar');
+    Route::post('/compras/{id}/recibir', [CompraController::class, 'marcarRecibido'])->name('compras.recibir');
+
+    // Módulo: Proveedores
+    Route::get('/proveedores', [ProveedorController::class, 'index'])->name('proveedores');
+    Route::post('/proveedores', [ProveedorController::class, 'guardar'])->name('proveedores.guardar');
+    Route::put('/proveedores/{id}', [ProveedorController::class, 'actualizar'])->name('proveedores.actualizar');
+    Route::delete('/proveedores/{id}', [ProveedorController::class, 'eliminar'])->name('proveedores.eliminar');
+
+    // Módulo: Finanzas
+    Route::get('/finanzas', [FinanzasController::class, 'index'])->name('finanzas');
+    Route::post('/finanzas/facturar', [FinanzasController::class, 'guardar'])->name('finanzas.guardar');
+    Route::get('/finanzas/cobrar/{id}', [FinanzasController::class, 'prepararCobro'])->name('finanzas.preparar');
+    Route::post('/finanzas/pago', [FinanzasController::class, 'registrarPago'])->name('finanzas.pago');
+
+    // API: Tasa BCV
+    Route::get('/api/bcv/tasa', [FinanzasController::class, 'consultarTasa'])->name('bcv.tasa');
+    Route::post('/api/bcv/refrescar', [FinanzasController::class, 'refrescarTasa'])->name('bcv.refrescar');
+
+    // Rutas de Impresión PDF
+    Route::get('/finanzas/imprimir/{id}', [FinanzasController::class, 'imprimirFactura'])->name('finanzas.imprimir');
+    Route::get('/finanzas/libro', [FinanzasController::class, 'imprimirLibro'])->name('finanzas.libro');
+
+    // Monitor de Taller
+    Route::get('/monitor', [RecepcionController::class, 'monitor'])->name('monitor');
+
+    // Reportes (Ahora con datos reales)
+    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes');
+    Route::get('/reportes/pdf', [ReporteController::class, 'exportarPdf'])->name('reportes.pdf');
+    Route::get('/reportes/csv', [ReporteController::class, 'exportarCsv'])->name('reportes.csv');
 });
-
-// Módulo: Recepción
-Route::get('/recepcion', [RecepcionController::class, 'index'])->name('recepcion.index');
-Route::post('/recepcion', [RecepcionController::class, 'guardar'])->name('recepcion.guardar');
-
-// Módulo: Servicios
-Route::get('/servicios', [ServicioController::class, 'index'])->name('servicios.index');
-Route::post('/servicios', [ServicioController::class, 'guardar'])->name('servicios.guardar');
-Route::put('/servicios/{id}', [ServicioController::class, 'actualizar'])->name('servicios.actualizar');
-Route::delete('/servicios/{id}', [ServicioController::class, 'eliminar'])->name('servicios.eliminar');
-
-// Módulo: Repuestos (Tus cambios)
-Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
-Route::put('/repuestos/{id}', [RepuestoController::class, 'update'])->name('repuestos.update');
-Route::post('/repuestos', [RepuestoController::class, 'store'])->name('repuestos.store');
-// Reportes de Inventario (PDFs)
-Route::get('/repuestos/imprimir/{id}', [App\Http\Controllers\RepuestoController::class, 'imprimirIndividual'])->name('repuestos.imprimir');
-Route::get('/repuestos/reporte', [App\Http\Controllers\RepuestoController::class, 'imprimirGeneral'])->name('repuestos.reporte');
-
-
-// Módulo: Empleados
-Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
-Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
-Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.actualizar');
-Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.eliminar');
-
-// Módulo: ventas
-Route::get('/ventas', [VentaController::class, 'index'])->name('ventas');
-Route::post('/ventas', [VentaController::class, 'guardar'])->name('ventas.guardar');
-// Reportes de Ventas
-Route::get('/ventas/imprimir/{id}', [App\Http\Controllers\VentaController::class, 'imprimirTicket'])->name('ventas.imprimir');
-Route::get('/ventas/reporte', [App\Http\Controllers\VentaController::class, 'imprimirReporte'])->name('ventas.reporte');
-
-
-// Módulo: Compras
-Route::get('/compras', [CompraController::class, 'index'])->name('compras');
-Route::post('/compras', [CompraController::class, 'guardar'])->name('compras.guardar');
-Route::post('/compras/{id}/recibir', [CompraController::class, 'marcarRecibido'])->name('compras.recibir');
-
-
-// Módulo: Proveedores
-Route::get('/proveedores', [ProveedorController::class, 'index'])->name('proveedores');
-Route::post('/proveedores', [ProveedorController::class, 'guardar'])->name('proveedores.guardar');
-Route::put('/proveedores/{id}', [ProveedorController::class, 'actualizar'])->name('proveedores.actualizar');
-Route::delete('/proveedores/{id}', [ProveedorController::class, 'eliminar'])->name('proveedores.eliminar');
-
-
-// Módulo: Finanzas
-Route::get('/finanzas', [FinanzasController::class, 'index'])->name('finanzas');
-Route::post('/finanzas/facturar', [FinanzasController::class, 'guardar'])->name('finanzas.guardar');
-Route::get('/finanzas/cobrar/{id}', [App\Http\Controllers\FinanzasController::class, 'prepararCobro'])->name('finanzas.preparar');
-
-// Rutas de Impresión PDF
-Route::get('/finanzas/imprimir/{id}', [App\Http\Controllers\FinanzasController::class, 'imprimirFactura'])->name('finanzas.imprimir');
-Route::get('/finanzas/libro', [App\Http\Controllers\FinanzasController::class, 'imprimirLibro'])->name('finanzas.libro');
-
-// Monitor de Taller
-Route::get('/monitor', [RecepcionController::class, 'monitor'])->name('monitor');
-
-
-// Reportes (Cambio de tu compañero)
-Route::get('/reportes', function () {
-    return view('reportes');
-})->name('reportes');
 
 
 // --- DISTRIBUIDOR DE TRÁFICO ---
 Route::get('/dashboard', function () {
-    $rol = Auth::user()->rol;
+    $rol = strtolower(Auth::user()->rol);
     if ($rol === 'gerente') return redirect()->route('gerente');
     if ($rol === 'administrador') return redirect()->route('administrador');
     if ($rol === 'mecanico') return redirect()->route('mecanico');
@@ -136,9 +144,7 @@ Route::get('/mecanico', [MecanicoController::class, 'index'])->middleware(['auth
 Route::post('/mecanico/orden/{id}/estado/{estado}', [MecanicoController::class, 'cambiarEstado'])->name('mecanico.estado');
 Route::post('/mecanico/orden/{id}/repuesto', [MecanicoController::class, 'agregarRepuesto'])->name('mecanico.repuesto');
 
-Route::get('/gerente', function () {
-    return view('gerente');
-})->middleware(['auth', 'rol:gerente'])->name('gerente');
+Route::get('/gerente', [App\Http\Controllers\GerenteController::class, 'index'])->middleware(['auth', 'rol:gerente'])->name('gerente');
 
 Route::get('/administrador', function () {
     return view('administrador');

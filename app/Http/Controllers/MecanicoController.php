@@ -12,10 +12,11 @@ class MecanicoController extends Controller
 {
     public function index()
     {
-        $mecanico = Empleado::where('nombre', Auth::user()->name)->first();
+        $mecanico = Empleado::where('user_id', Auth::id())->orWhere('nombre', Auth::user()->name)->first();
 
         if (!$mecanico) {
-            return redirect('/')->withErrors(['No tienes un perfil de empleado asignado. Verifica que tu nombre de usuario coincida con el de empleado.']);
+            Auth::logout();
+            return redirect('/login')->withErrors(['email' => 'Tu usuario no está enlazado a un perfil de empleado. Contacta al gerente.']);
         }
 
         $pendientes = OrdenServicio::with('vehiculo')->where('mecanico_id', $mecanico->id)->where('estado', 'En Espera')->get();
@@ -40,6 +41,14 @@ class MecanicoController extends Controller
         
         if (in_array($estado, $estadosPermitidos)) {
             $orden->estado = $estado;
+            
+            // Registrar timestamp de la etapa para el timeline visual
+            if ($estado == 'En Reparación') {
+                $orden->fecha_inicio_reparacion = now();
+            } elseif ($estado == 'Finalizado') {
+                $orden->fecha_finalizado = now();
+            }
+            
             $orden->save();
             
             $mensaje = ($estado == 'En Reparación') ? '¡Reparación iniciada!' : '¡Vehículo reparado con éxito!';
@@ -77,10 +86,11 @@ class MecanicoController extends Controller
 
     public function historial()
     {
-        $mecanico = Empleado::where('nombre', Auth::user()->name)->first();
+        $mecanico = Empleado::where('user_id', Auth::id())->orWhere('nombre', Auth::user()->name)->first();
 
         if (!$mecanico) {
-            return redirect('/')->withErrors(['No tienes un perfil de empleado asignado.']);
+            Auth::logout();
+            return redirect('/login')->withErrors(['email' => 'Tu usuario no está enlazado a un perfil de empleado.']);
         }
 
         // Traemos las órdenes que este mecánico ya terminó. 
@@ -105,10 +115,11 @@ class MecanicoController extends Controller
 
     public function insumos()
     {
-        $mecanico = Empleado::where('nombre', Auth::user()->name)->first();
+        $mecanico = Empleado::where('user_id', Auth::id())->orWhere('nombre', Auth::user()->name)->first();
 
         if (!$mecanico) {
-            return redirect('/')->withErrors(['No tienes un perfil de empleado asignado.']);
+            Auth::logout();
+            return redirect('/login')->withErrors(['email' => 'Tu usuario no está enlazado a un perfil de empleado.']);
         }
 
         // Buscamos todas las órdenes de este mecánico y los repuestos que usó
