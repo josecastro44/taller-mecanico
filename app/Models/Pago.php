@@ -15,6 +15,11 @@ class Pago extends Model
         'observacion'
     ];
 
+    protected $casts = [
+        'monto'    => 'decimal:2',
+        'tasa_bcv' => 'decimal:4',
+    ];
+
     /**
      * Relación: Este pago pertenece a una factura
      */

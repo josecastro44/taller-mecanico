@@ -75,7 +75,7 @@ class MecanicoController extends Controller
         $repuesto->stock -= $request->cantidad;
         $repuesto->save();
 
-        $precioFinal = $repuesto->precio ?? $repuesto->precio_venta ?? 0;
+        $precioFinal = round((float) ($repuesto->precio_venta ?? 0), 2);
         $orden->repuestos()->attach($repuesto->id, [
             'cantidad'        => $request->cantidad,
             'precio_unitario' => $precioFinal

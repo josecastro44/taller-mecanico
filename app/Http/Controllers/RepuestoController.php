@@ -52,9 +52,15 @@ class RepuestoController extends Controller
             'stock'             => 'required|integer|min:0',
         ]);
 
-        Repuesto::create($request->all());
+        $data = $request->only([
+            'nombre', 'codigo', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock'
+        ]);
+        $data['costo_adquisicion'] = round((float) $data['costo_adquisicion'], 2);
+        $data['precio_venta'] = round((float) $data['precio_venta'], 2);
 
-        return redirect()->back()->with('exito', '¡Pieza registrada exitosamente en CTR!');
+        Repuesto::create($data);
+
+        return redirect()->back()->with('exito', '¡Pieza registrada exitosamente en AutoSys!');
     }
 
     /**
@@ -73,7 +79,14 @@ class RepuestoController extends Controller
         ]);
 
         $repuesto = Repuesto::findOrFail($id);
-        $repuesto->update($request->all());
+        
+        $data = $request->only([
+            'nombre', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock'
+        ]);
+        $data['costo_adquisicion'] = round((float) $data['costo_adquisicion'], 2);
+        $data['precio_venta'] = round((float) $data['precio_venta'], 2);
+
+        $repuesto->update($data);
 
         return redirect()->back()->with('exito', '¡Información actualizada correctamente!');
     }

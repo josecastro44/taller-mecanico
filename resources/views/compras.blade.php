@@ -7,9 +7,14 @@
             <h2 class="text-2xl font-bold text-[#263A47]">Órdenes de Compra (Reabastecimiento)</h2>
             <p class="text-[#728495]">Ingreso de mercancía e insumos al inventario del taller</p>
         </div>
-        <button onclick="abrirModalCompra()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
-            <i class="ph ph-bag text-xl"></i> Nueva Compra
-        </button>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('compras.reporte') }}" target="_blank" class="bg-white text-[#263A47] border border-[#263A47] px-4 py-2.5 rounded-lg hover:bg-[#F1F4F8] shadow-sm transition-all flex items-center gap-2 font-medium">
+                <i class="ph ph-file-pdf text-xl text-red-500"></i> Reporte PDF
+            </a>
+            <button onclick="abrirModalCompra()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
+                <i class="ph ph-bag text-xl"></i> Nueva Compra
+            </button>
+        </div>
     </div>
 
     @if(session('exito'))

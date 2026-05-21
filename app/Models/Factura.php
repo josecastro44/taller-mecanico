@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Factura extends Model
 {
-    // Damos permiso a Laravel para guardar en estas columnas
     protected $fillable = [
         'numero_factura',
         'referencia',
@@ -18,6 +17,15 @@ class Factura extends Model
         'total_pagado',
         'saldo_pendiente',
         'estado_pago'
+    ];
+
+    protected $casts = [
+        'subtotal_repuestos' => 'decimal:2',
+        'subtotal_mano_obra' => 'decimal:2',
+        'base_imponible'     => 'decimal:2',
+        'total_facturado'    => 'decimal:2',
+        'total_pagado'       => 'decimal:2',
+        'saldo_pendiente'    => 'decimal:2',
     ];
 
     /**

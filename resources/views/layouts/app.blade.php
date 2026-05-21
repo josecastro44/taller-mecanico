@@ -161,6 +161,11 @@
                     <a href="/empleados" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('empleados') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-users text-lg"></i><span class="font-medium text-sm">Empleados y Nómina</span></a>
                     <a href="/finanzas" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('finanzas') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-currency-dollar text-lg"></i><span class="font-medium text-sm">Facturación y Finanzas</span></a>
 
+                    {{-- Sección de Contabilidad --}}
+                    <div class="text-[10px] font-bold text-[#728495] uppercase tracking-wider mb-2 px-3 mt-4">Contabilidad</div>
+                    <a href="{{ route('gastos') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('gastos') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-money text-lg"></i><span class="font-medium text-sm">Gastos Operativos</span></a>
+                    <a href="{{ route('contabilidad') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('contabilidad') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-book-open text-lg"></i><span class="font-medium text-sm">Libro Diario</span></a>
+
                     {{-- Sección de Reportes --}}
                     <div class="text-[10px] font-bold text-[#728495] uppercase tracking-wider mb-2 px-3 mt-4">Auditoría</div>
                     <a href="{{ route('reportes') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->routeIs('reportes') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}">
@@ -178,6 +183,10 @@
                     <a href="{{ route('ventas') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('ventas') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-shopping-cart text-lg"></i><span class="font-medium text-sm">Ventas</span></a>
                     <a href="{{ route('compras') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('compras') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-bag text-lg"></i><span class="font-medium text-sm">Compras</span></a>
                     <a href="{{ route('proveedores') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('proveedores') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-truck text-lg"></i><span class="font-medium text-sm">Proveedores</span></a>
+
+                    <div class="text-[10px] font-bold text-[#728495] uppercase tracking-wider mb-2 px-3 mt-4">Contabilidad</div>
+                    <a href="{{ route('gastos') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('gastos') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-money text-lg"></i><span class="font-medium text-sm">Gastos Operativos</span></a>
+                    <a href="{{ route('contabilidad') }}" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 {{ request()->is('contabilidad') ? 'bg-[#4A5B6A] text-white shadow-md' : 'text-[#B4C5D8] hover:bg-[#4A5B6A]/60 hover:text-white' }}"><i class="ph ph-book-open text-lg"></i><span class="font-medium text-sm">Libro Diario</span></a>
                 @endif
                 
             @endif

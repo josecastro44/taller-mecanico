@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Ventas</title>
+    <title>Reporte de Compras</title>
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #263A47; font-size: 10px; margin: 0; padding: 20px; }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 15px; }
@@ -28,37 +28,39 @@
     <div class="header">
         <div class="logo">AutoSys</div>
         <div class="company-info">RIF: J-00000000-0 | Barquisimeto, Edo. Lara | Tel: 0424-xxx-xxxx</div>
-        <div class="title">REPORTE DE VENTAS MOSTRADOR</div>
-        <div style="font-size: 10px; color: #728495; margin-top: 5px;">Período: {{ strtoupper($mes) }}</div>
+        <div class="title">REPORTE DE ÓRDENES DE COMPRA</div>
+        <div style="font-size: 10px; color: #728495; margin-top: 5px;">Historial de abastecimiento de inventario</div>
     </div>
 
     <table class="data-table">
         <thead>
             <tr>
                 <th>FECHA</th>
-                <th>N° TICKET</th>
-                <th class="text-left">CLIENTE</th>
-                <th>CI / RIF</th>
-                <th>MÉTODO PAGO</th>
+                <th>N° ORDEN</th>
+                <th class="text-left">PROVEEDOR</th>
+                <th>ESTADO</th>
                 <th class="text-right">TOTAL ($)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($ventas as $v)
+            @php $totalInversion = 0; @endphp
+            @foreach($compras as $c)
+            @php $totalInversion += $c->total; @endphp
             <tr>
-                <td>{{ $v->created_at->format('d/m/Y') }}</td>
-                <td style="font-weight: bold;">{{ $v->numero_ticket }}</td>
-                <td class="text-left" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $v->cliente }}</td>
-                <td>{{ $v->cedula }}</td>
-                <td>{{ $v->metodo_pago }}</td>
-                <td class="text-right" style="font-weight: bold; color: #16a34a;">{{ number_format($v->total, 2) }}</td>
+                <td>{{ $c->created_at->format('d/m/Y') }}</td>
+                <td style="font-weight: bold;">{{ $c->numero_orden }}</td>
+                <td class="text-left">{{ $c->proveedor->nombre }}</td>
+                <td style="color: {{ $c->estado === 'Recibido' ? '#16a34a' : '#d97706' }}; font-weight: bold;">
+                    {{ strtoupper($c->estado) }}
+                </td>
+                <td class="text-right" style="font-weight: bold;">{{ number_format($c->total, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="totales">
-        TOTAL INGRESOS MOSTRADOR: <span style="color: #16a34a;">$ {{ number_format($totalVentas, 2) }}</span>
+        TOTAL INVERSIÓN: <span style="color: #dc2626;">$ {{ number_format($totalInversion, 2) }}</span>
     </div>
 
     <div class="footer">

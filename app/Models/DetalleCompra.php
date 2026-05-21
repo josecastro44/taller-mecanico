@@ -5,6 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 class DetalleCompra extends Model {
     protected $fillable = ['compra_id', 'repuesto_id', 'cantidad', 'precio_unitario', 'subtotal'];
     
+    protected $casts = [
+        'precio_unitario' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+    ];
+
     public function compra() { return $this->belongsTo(Compra::class); }
     public function repuesto() { return $this->belongsTo(Repuesto::class); }
 }

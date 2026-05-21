@@ -20,6 +20,11 @@ class Repuesto extends Model
         'stock_minimo'
     ];
 
+    protected $casts = [
+        'costo_adquisicion' => 'decimal:2',
+        'precio_venta' => 'decimal:2',
+    ];
+
     /**
      * Lógica para autogenerar el código SKU antes de crear el registro
      */

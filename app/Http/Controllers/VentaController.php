@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Venta;
 use App\Models\DetalleVenta;
 use App\Models\Repuesto;
+use App\Services\ContabilidadService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 
@@ -52,15 +53,21 @@ class VentaController extends Controller
             return back()->withErrors(['stock' => 'No hay suficiente stock. Quedan: ' . $repuesto->stock]);
         }
 
-        $precioReal = $repuesto->precio ?? $repuesto->precio_venta ?? 0;
+        $precioReal = round((float) ($repuesto->precio_venta ?? 0), 2);
+        $totalVenta = round($precioReal * $request->cantidad, 2);
+
+        // Generar número de ticket seguro
+        $ultimoRegistro = Venta::latest('id')->first();
+        $siguienteId = $ultimoRegistro ? $ultimoRegistro->id + 1 : 1;
+        $numeroTicket = 'VT-' . str_pad($siguienteId, 5, '0', STR_PAD_LEFT);
 
         // 1. Crear el Ticket con los datos del cliente
         $venta = Venta::create([
-            'numero_ticket' => 'VT-' . rand(1000, 9999),
+            'numero_ticket' => $numeroTicket,
             'cliente'       => $request->cliente,
             'cedula'        => $request->cedula,
             'telefono'      => $request->telefono,
-            'total'         => $precioReal * $request->cantidad,
+            'total'         => $totalVenta,
             'metodo_pago'   => $request->metodo_pago
         ]);
 
@@ -76,6 +83,16 @@ class VentaController extends Controller
         // 3. Descontar del inventario
         $repuesto->stock -= $request->cantidad;
         $repuesto->save();
+
+        // 4. Registrar asiento contable de ingreso
+        ContabilidadService::registrarIngreso(
+            $totalVenta,
+            'Venta mostrador: ' . $repuesto->nombre . ' x' . $request->cantidad . ' a ' . $request->cliente,
+            $venta->numero_ticket,
+            'venta_mostrador',
+            Venta::class,
+            $venta->id
+        );
 
         return back()->with('exito', '¡Venta registrada y stock descontado exitosamente!');
     }

@@ -36,10 +36,10 @@
     <section id="inicio" class="bg-[#B4C5D8]/20 flex-1 flex items-center justify-center py-24 px-8 border-b border-[#B4C5D8]/50">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-4xl md:text-6xl font-extrabold text-[#263A47] mb-6 leading-tight">
-                Tu Taller Mecánico <span class="text-[#4A5B6A]">Respaldado por Tecnología de Punta</span>
+                Expertos en Mecánica Automotriz <span class="text-[#4A5B6A]">para tu Tranquilidad</span>
             </h2>
             <p class="text-lg md:text-xl text-[#728495] mb-10 max-w-2xl mx-auto">
-                En nuestro taller, la precisión no es opcional. Utilizamos plataformas digitales de última generación para gestionar cada reparación, asegurando que tu vehículo reciba un servicio optimizado, transparente y profesional.
+                Realizamos mantenimiento preventivo, diagnóstico computarizado, reparación de motores y revisión de frenos. Deja tu vehículo en manos de profesionales y asegura su óptimo rendimiento en la vía.
             </p>
             <a href="#contacto" class="inline-block bg-[#263A47] text-white px-8 py-4 rounded-lg text-lg font-bold shadow-lg hover:bg-[#4A5B6A] hover:-translate-y-1 transition transform">
                 Agendar Cita
@@ -52,16 +52,15 @@
             <div class="order-2 md:order-1">
                 <h3 class="text-3xl font-bold text-[#263A47] mb-6 border-b-4 border-[#4A5B6A] inline-block pb-2">Quiénes Somos</h3>
                 <p class="text-[#728495] text-lg mb-4 leading-relaxed">
-                   Somos un equipo apasionado por la excelencia automotriz y la innovación. En colaboración con el respaldo tecnológico de <strong>Castro Technology Research</strong>, Enfocarnos en lo que realmente importa: la seguridad de tu auto y tu tranquilidad.
+                   Somos un equipo de mecánicos apasionados por los motores y la seguridad vial. Nuestro taller cuenta con herramientas de diagnóstico de vanguardia para detectar y solucionar cualquier falla mecánica o eléctrica en tu vehículo.
                 </p>
                 <p class="text-[#728495] text-lg leading-relaxed">
-                    Entendemos que valoras tu tiempo. Por eso, integramos procesos operativos y administrativos mediante una interfaz moderna que nos permite entregarte diagnósticos rápidos, presupuestos claros y un seguimiento detallado de tu mantenimiento.
+                    Sabemos que tu auto es indispensable para ti. Por eso, te garantizamos reparaciones honestas, presupuestos transparentes antes de iniciar cualquier trabajo y el uso de repuestos de alta calidad para alargar la vida útil de tu motor.
                 </p>
             </div>
             <div class="order-1 md:order-2 flex justify-center">
-                <div class="w-full h-80 bg-[#B4C5D8]/30 rounded-3xl flex items-center justify-center border-2 border-[#98A9BE]/50 shadow-inner relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-[#263A47]/10 to-transparent"></div>
-                    <i class="ph ph-users-three text-9xl text-[#4A5B6A]"></i>
+                <div class="w-full h-80 rounded-3xl shadow-xl relative overflow-hidden border-4 border-white">
+                    <img src="{{ asset('images/taller.png') }}" alt="Taller Mecánico" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -76,7 +75,7 @@
 
         <div class="max-w-4xl mx-auto text-center mb-12 relative z-10 mt-8">
             <h3 class="text-3xl font-bold mb-4">Contáctanos</h3>
-            <p class="text-[#B4C5D8] text-lg">¿Tu auto necesita atención profesional? Déjanos tus datos y nos pondremos en contacto para brindarte la asesoría técnica que te mereces.</p>
+            <p class="text-[#B4C5D8] text-lg">¿Escuchas un ruido extraño o toca hacerle servicio a tu vehículo? Déjanos tus datos, el modelo de tu auto y la falla que presenta, y nos pondremos en contacto contigo para agendar una revisión.</p>
         </div>
         
         <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-8 md:p-10 text-[#263A47] relative z-10">
@@ -87,17 +86,17 @@
                         <input type="text" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition" placeholder="Ej. Juan Pérez">
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold mb-2 text-[#728495]">Correo Electrónico</label>
-                        <input type="email" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition" placeholder="correo@taller.com">
+                        <label class="block text-sm font-semibold mb-2 text-[#728495]">Teléfono / WhatsApp</label>
+                        <input type="tel" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition" placeholder="Ej. 0414-1234567">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-2 text-[#728495]">Mensaje</label>
-                    <textarea rows="4" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition resize-none" placeholder="Hola, me gustaría probar la plataforma..."></textarea>
+                    <label class="block text-sm font-semibold mb-2 text-[#728495]">Marca, Modelo y Falla (o Servicio Requerido)</label>
+                    <textarea rows="4" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-3 focus:outline-none focus:border-[#4A5B6A] focus:ring-2 focus:ring-[#B4C5D8] transition resize-none" placeholder="Ej: Toyota Corolla 2015. Necesito cambiarle el aceite y revisar los frenos delanteros..."></textarea>
                 </div>
                 <button type="button" class="w-full bg-[#263A47] text-white font-bold py-4 rounded-lg shadow-md hover:bg-[#263A47]/90 transition text-lg flex justify-center items-center gap-2">
                     <i class="ph ph-paper-plane-right text-xl"></i>
-                    Enviar Mensaje
+                    Solicitar Cita de Revisión
                 </button>
             </form>
         </div>

@@ -16,6 +16,8 @@ use App\Http\Controllers\FinanzasController;
 use App\Http\Controllers\MecanicoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\GastoOperativoController;
+use App\Http\Controllers\ContabilidadController;
 
 // ==========================================
 // RUTAS PÚBLICAS
@@ -70,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/servicios', [ServicioController::class, 'guardar'])->name('servicios.guardar');
     Route::put('/servicios/{id}', [ServicioController::class, 'actualizar'])->name('servicios.actualizar');
     Route::delete('/servicios/{id}', [ServicioController::class, 'eliminar'])->name('servicios.eliminar');
+    Route::get('/servicios/reporte', [ServicioController::class, 'imprimirReporte'])->name('servicios.reporte');
 
     // Módulo: Repuestos (Tus cambios)
     Route::get('/repuestos', [RepuestoController::class, 'index'])->name('repuestos.index');
@@ -84,6 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/empleados', [EmpleadoController::class, 'guardar'])->name('empleados.guardar');
     Route::put('/empleados/{id}', [EmpleadoController::class, 'actualizar'])->name('empleados.actualizar');
     Route::delete('/empleados/{id}', [EmpleadoController::class, 'eliminar'])->name('empleados.eliminar');
+    Route::get('/empleados/reporte', [EmpleadoController::class, 'imprimirReporte'])->name('empleados.reporte');
 
     // Módulo: ventas
     Route::get('/ventas', [VentaController::class, 'index'])->name('ventas');
@@ -96,12 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/compras', [CompraController::class, 'index'])->name('compras');
     Route::post('/compras', [CompraController::class, 'guardar'])->name('compras.guardar');
     Route::post('/compras/{id}/recibir', [CompraController::class, 'marcarRecibido'])->name('compras.recibir');
+    Route::get('/compras/reporte', [CompraController::class, 'imprimirReporte'])->name('compras.reporte');
 
     // Módulo: Proveedores
     Route::get('/proveedores', [ProveedorController::class, 'index'])->name('proveedores');
     Route::post('/proveedores', [ProveedorController::class, 'guardar'])->name('proveedores.guardar');
     Route::put('/proveedores/{id}', [ProveedorController::class, 'actualizar'])->name('proveedores.actualizar');
     Route::delete('/proveedores/{id}', [ProveedorController::class, 'eliminar'])->name('proveedores.eliminar');
+    Route::get('/proveedores/reporte', [ProveedorController::class, 'imprimirReporte'])->name('proveedores.reporte');
 
     // Módulo: Finanzas
     Route::get('/finanzas', [FinanzasController::class, 'index'])->name('finanzas');
@@ -124,6 +130,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes');
     Route::get('/reportes/pdf', [ReporteController::class, 'exportarPdf'])->name('reportes.pdf');
     Route::get('/reportes/csv', [ReporteController::class, 'exportarCsv'])->name('reportes.csv');
+
+    // Módulo: Gastos Operativos
+    Route::get('/gastos', [GastoOperativoController::class, 'index'])->name('gastos');
+    Route::post('/gastos', [GastoOperativoController::class, 'guardar'])->name('gastos.guardar');
+    Route::put('/gastos/{id}', [GastoOperativoController::class, 'actualizar'])->name('gastos.actualizar');
+    Route::delete('/gastos/{id}', [GastoOperativoController::class, 'eliminar'])->name('gastos.eliminar');
+    Route::post('/gastos/{id}/pagar', [GastoOperativoController::class, 'marcarPagado'])->name('gastos.pagar');
+    Route::post('/gastos/categoria/guardar', [GastoOperativoController::class, 'guardarCategoria'])->name('gastos.categoria.guardar');
+
+    // Módulo: Contabilidad / Libro Diario
+    Route::get('/contabilidad', [ContabilidadController::class, 'libroDiario'])->name('contabilidad');
+    Route::get('/contabilidad/balance', [ContabilidadController::class, 'balance'])->name('contabilidad.balance');
+    Route::get('/contabilidad/libro-pdf', [ContabilidadController::class, 'exportarLibroPdf'])->name('contabilidad.libro.pdf');
+    Route::get('/contabilidad/gastos-pdf', [ContabilidadController::class, 'exportarGastosPdf'])->name('contabilidad.gastos.pdf');
+    Route::get('/contabilidad/balance-pdf', [ContabilidadController::class, 'exportarBalancePdf'])->name('contabilidad.balance.pdf');
 });
 
 

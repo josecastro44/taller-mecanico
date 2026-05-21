@@ -4,60 +4,71 @@
     <meta charset="UTF-8">
     <title>Reporte General del Taller</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica', Arial, sans-serif; }
-        body { font-size: 11px; color: #333; padding: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { font-size: 10px; color: #333; padding: 20px; }
         
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #263A47; padding-bottom: 15px; }
-        .header h1 { font-size: 18px; color: #263A47; margin-bottom: 3px; }
-        .header p { color: #728495; font-size: 11px; }
+        .logo { font-size: 20px; font-weight: bold; text-transform: uppercase; color: #2563eb; }
+        .company-info { font-size: 9px; color: #728495; margin-top: 4px; }
+        .title { font-size: 16px; font-weight: bold; margin-top: 10px; color: #263A47; }
         
-        .kpis { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .kpi { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 10px 15px; text-align: center; width: 23%; }
-        .kpi .valor { font-size: 18px; font-weight: bold; color: #263A47; }
-        .kpi .etiqueta { font-size: 9px; color: #728495; text-transform: uppercase; letter-spacing: 0.5px; }
+        table.kpis { width: 100%; border-collapse: separate; border-spacing: 10px 0; margin-bottom: 20px; }
+        .kpi { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; text-align: center; }
+        .kpi .valor { font-size: 20px; font-weight: bold; color: #263A47; }
+        .kpi .etiqueta { font-size: 9px; color: #728495; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 5px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { background: #263A47; color: white; padding: 8px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; }
-        td { padding: 7px 10px; border-bottom: 1px solid #e9ecef; font-size: 10px; }
-        tr:nth-child(even) { background: #f8f9fa; }
+        table.data-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; }
+        .data-table th { background: #263A47; color: white; padding: 8px 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; text-align: left; }
+        .data-table td { padding: 7px 10px; border-bottom: 1px solid #e9ecef; font-size: 10px; }
+        .data-table tr:nth-child(even) { background: #f8f9fa; }
         
         .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: bold; }
         .badge-espera { background: #f3f4f6; color: #6b7280; }
         .badge-reparacion { background: #fef3c7; color: #d97706; }
         .badge-finalizado { background: #dbeafe; color: #2563eb; }
-        .badge-entregado { background: #d1fae5; color: #059669; }
+        .badge-entregado { background: #dcfce7; color: #16a34a; }
+        .badge-pagado { background: #dcfce7; color: #16a34a; }
+        .badge-pendiente { background: #fee2e2; color: #dc2626; }
+        .badge-parcial { background: #fef3c7; color: #d97706; }
         
-        .footer { margin-top: 20px; text-align: center; color: #728495; font-size: 9px; border-top: 1px solid #dee2e6; padding-top: 10px; }
+        .section-title { font-size: 13px; color: #263A47; margin-bottom: 5px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; }
+        .text-right { text-align: right; }
+        .footer { position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 9px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+        .page-number:after { content: counter(page); }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🔧 Reporte General del Taller — AutoSys</h1>
-        <p>Período: {{ $mes }} | Generado: {{ now()->format('d/m/Y H:i') }}</p>
+        <div class="logo">AutoSys</div>
+        <div class="company-info">RIF: J-00000000-0 | Barquisimeto, Edo. Lara | Tel: 0424-xxx-xxxx</div>
+        <div class="title">REPORTE GENERAL DEL TALLER</div>
+        <div style="font-size: 10px; color: #728495; margin-top: 5px;">Período: {{ $mes }}</div>
     </div>
 
-    <div class="kpis">
-        <div class="kpi">
-            <div class="valor">{{ $totalOrdenes }}</div>
-            <div class="etiqueta">Órdenes Totales</div>
-        </div>
-        <div class="kpi">
-            <div class="valor">${{ number_format($totalIngresos, 2) }}</div>
-            <div class="etiqueta">Ingresos Facturados</div>
-        </div>
-        <div class="kpi">
-            <div class="valor">{{ $facturas->count() }}</div>
-            <div class="etiqueta">Facturas Emitidas</div>
-        </div>
-        <div class="kpi">
-            <div class="valor">${{ $facturas->count() > 0 ? number_format($totalIngresos / $facturas->count(), 2) : '0.00' }}</div>
-            <div class="etiqueta">Ticket Promedio</div>
-        </div>
-    </div>
+    <table class="kpis">
+        <tr>
+            <td class="kpi">
+                <div class="valor">{{ $totalOrdenes }}</div>
+                <div class="etiqueta">Órdenes Totales</div>
+            </td>
+            <td class="kpi">
+                <div class="valor">$ {{ number_format($totalIngresos, 2) }}</div>
+                <div class="etiqueta">Ingresos Facturados</div>
+            </td>
+            <td class="kpi">
+                <div class="valor">{{ $facturas->count() }}</div>
+                <div class="etiqueta">Facturas Emitidas</div>
+            </td>
+            <td class="kpi">
+                <div class="valor">$ {{ $facturas->count() > 0 ? number_format($totalIngresos / $facturas->count(), 2) : '0.00' }}</div>
+                <div class="etiqueta">Ticket Promedio</div>
+            </td>
+        </tr>
+    </table>
 
-    <h3 style="font-size: 13px; color: #263A47; margin-bottom: 5px;">Detalle de Órdenes de Servicio</h3>
+    <div class="section-title">Detalle de Órdenes de Servicio</div>
 
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>#O.S.</th>
@@ -88,46 +99,58 @@
                         <span class="badge badge-entregado">Entregado</span>
                     @endif
                 </td>
-                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">{{ Str::limit($orden->diagnostico, 60) }}</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ Str::limit($orden->diagnostico, 50) }}</td>
             </tr>
             @endforeach
+            @if($ordenes->count() === 0)
+            <tr><td colspan="7" class="text-center" style="color: #94a3b8; padding: 15px;">No hay órdenes de servicio en este período</td></tr>
+            @endif
         </tbody>
     </table>
 
     @if($facturas->count() > 0)
-    <h3 style="font-size: 13px; color: #263A47; margin: 20px 0 5px;">Resumen de Facturación</h3>
-    <table>
+    <div class="section-title" style="margin-top: 30px;">Resumen de Facturación</div>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>N° Factura</th>
                 <th>Referencia</th>
-                <th style="text-align: right;">Repuestos</th>
-                <th style="text-align: right;">Mano Obra</th>
-                <th style="text-align: right;">IVA</th>
-                <th style="text-align: right;">Total</th>
+                <th class="text-right">Repuestos ($)</th>
+                <th class="text-right">Mano Obra ($)</th>
+                <th class="text-right">Total ($)</th>
+                <th class="text-right">Estado Pago</th>
             </tr>
         </thead>
         <tbody>
             @foreach($facturas as $factura)
             <tr>
                 <td style="font-weight: bold;">{{ $factura->numero_factura }}</td>
-                <td>{{ $factura->referencia }}</td>
-                <td style="text-align: right;">${{ number_format($factura->subtotal_repuestos, 2) }}</td>
-                <td style="text-align: right;">${{ number_format($factura->subtotal_mano_obra, 2) }}</td>
-                <td style="text-align: right;">${{ number_format($factura->monto_iva, 2) }}</td>
-                <td style="text-align: right; font-weight: bold;">${{ number_format($factura->total_facturado, 2) }}</td>
+                <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $factura->referencia }}</td>
+                <td class="text-right">{{ number_format($factura->subtotal_repuestos, 2) }}</td>
+                <td class="text-right">{{ number_format($factura->subtotal_mano_obra, 2) }}</td>
+                <td class="text-right" style="font-weight: bold; color: #16a34a;">{{ number_format($factura->total_facturado, 2) }}</td>
+                <td class="text-right">
+                    @if($factura->estado_pago === 'Pagado')
+                        <span class="badge badge-pagado">PAGADO</span>
+                    @elseif($factura->estado_pago === 'Parcial')
+                        <span class="badge badge-parcial">PARCIAL</span>
+                    @else
+                        <span class="badge badge-pendiente">PENDIENTE</span>
+                    @endif
+                </td>
             </tr>
             @endforeach
             <tr style="background: #263A47; color: white; font-weight: bold;">
-                <td colspan="5" style="text-align: right; padding: 8px 10px;">TOTAL FACTURADO:</td>
-                <td style="text-align: right; padding: 8px 10px;">${{ number_format($totalIngresos, 2) }}</td>
+                <td colspan="4" class="text-right" style="padding: 10px;">TOTAL FACTURADO:</td>
+                <td class="text-right" style="padding: 10px; font-size: 14px;">$ {{ number_format($totalIngresos, 2) }}</td>
+                <td></td>
             </tr>
         </tbody>
     </table>
     @endif
 
     <div class="footer">
-        AutoSys — Sistema de Gestión de Taller Mecánico | Reporte generado automáticamente
+        Generado el {{ now()->format('d/m/Y H:i') }} — Sistema AutoSys | Página <span class="page-number"></span>
     </div>
 </body>
 </html>

@@ -161,4 +161,12 @@ class EmpleadoController extends Controller
         $empleado->delete();
         return back()->with('exito', '¡Empleado y su acceso al sistema eliminados!');
     }
+
+    public function imprimirReporte()
+    {
+        $empleados = Empleado::with('user')->orderBy('nombre')->get();
+        $pdf = \PDF::loadView('pdfs.reporte_empleados', compact('empleados'));
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->stream('reporte_empleados.pdf');
+    }
 }

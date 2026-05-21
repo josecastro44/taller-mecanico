@@ -107,6 +107,32 @@ class DashboardController extends Controller
             ];
         }
 
+        // 4. Gastos operativos vencidos
+        $gastosVencidos = \App\Models\GastoOperativo::where('estado', 'pendiente')
+            ->where('prox_vencimiento', '<', \Carbon\Carbon::today())
+            ->count();
+        if ($gastosVencidos > 0) {
+            $alertas[] = [
+                'tipo' => 'inventario',
+                'titulo' => 'Gastos Vencidos',
+                'mensaje' => 'Hay ' . $gastosVencidos . ' gasto(s) operativo(s) vencidos sin pagar.',
+                'tiempo' => 'Revisar Gastos'
+            ];
+        }
+
+        // 5. Gastos próximos a vencer (5 días)
+        $gastosProximos = \App\Models\GastoOperativo::where('estado', 'pendiente')
+            ->whereBetween('prox_vencimiento', [\Carbon\Carbon::today(), \Carbon\Carbon::today()->addDays(5)])
+            ->count();
+        if ($gastosProximos > 0) {
+            $alertas[] = [
+                'tipo' => 'ordenes',
+                'titulo' => 'Gastos por Vencer',
+                'mensaje' => $gastosProximos . ' gasto(s) vencen en los próximos 5 días.',
+                'tiempo' => 'Revisar Gastos'
+            ];
+        }
+
         return response()->json($alertas);
     }
 

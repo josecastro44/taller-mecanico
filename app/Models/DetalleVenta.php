@@ -15,6 +15,11 @@ class DetalleVenta extends Model
         'subtotal'
     ];
 
+    protected $casts = [
+        'precio_unitario' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+    ];
+
     // LA SOLUCIÓN: Le decimos a Laravel que este detalle pertenece a un Repuesto
     public function repuesto()
     {

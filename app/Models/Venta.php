@@ -8,7 +8,11 @@ class Venta extends Model
 {
     protected $fillable = ['numero_ticket', 'cliente', 'cedula', 'telefono', 'total', 'metodo_pago'];
 
-public function detalles()
+    protected $casts = [
+        'total' => 'decimal:2',
+    ];
+
+    public function detalles()
     {
         return $this->hasMany(DetalleVenta::class);
     }

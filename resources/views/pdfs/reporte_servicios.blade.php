@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Ventas</title>
+    <title>Catálogo de Servicios</title>
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #263A47; font-size: 10px; margin: 0; padding: 20px; }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 15px; }
@@ -18,8 +18,6 @@
         .text-right { text-align: right; }
         .text-left { text-align: left; }
         
-        .totales { margin-top: 20px; width: 100%; border-top: 2px solid #263A47; padding-top: 10px; text-align: right; font-weight: bold; font-size: 14px; }
-        
         .footer { position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 9px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px; }
         .page-number:after { content: counter(page); }
     </style>
@@ -28,38 +26,32 @@
     <div class="header">
         <div class="logo">AutoSys</div>
         <div class="company-info">RIF: J-00000000-0 | Barquisimeto, Edo. Lara | Tel: 0424-xxx-xxxx</div>
-        <div class="title">REPORTE DE VENTAS MOSTRADOR</div>
-        <div style="font-size: 10px; color: #728495; margin-top: 5px;">Período: {{ strtoupper($mes) }}</div>
+        <div class="title">CATÁLOGO DE SERVICIOS</div>
+        <div style="font-size: 10px; color: #728495; margin-top: 5px;">Mano de obra y precios tabulados</div>
     </div>
 
     <table class="data-table">
         <thead>
             <tr>
-                <th>FECHA</th>
-                <th>N° TICKET</th>
-                <th class="text-left">CLIENTE</th>
-                <th>CI / RIF</th>
-                <th>MÉTODO PAGO</th>
-                <th class="text-right">TOTAL ($)</th>
+                <th>CÓDIGO</th>
+                <th class="text-left">DESCRIPCIÓN DEL SERVICIO</th>
+                <th class="text-right">SENCILLO ($)</th>
+                <th class="text-right">ALTA GAMA ($)</th>
+                <th class="text-right">CARGA PESADA ($)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($ventas as $v)
+            @foreach($servicios as $s)
             <tr>
-                <td>{{ $v->created_at->format('d/m/Y') }}</td>
-                <td style="font-weight: bold;">{{ $v->numero_ticket }}</td>
-                <td class="text-left" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $v->cliente }}</td>
-                <td>{{ $v->cedula }}</td>
-                <td>{{ $v->metodo_pago }}</td>
-                <td class="text-right" style="font-weight: bold; color: #16a34a;">{{ number_format($v->total, 2) }}</td>
+                <td style="font-weight: bold; color: #4A5B6A;">{{ $s->codigo }}</td>
+                <td class="text-left" style="font-weight: bold;">{{ $s->descripcion }}</td>
+                <td class="text-right">{{ number_format($s->precio_sencillo, 2) }}</td>
+                <td class="text-right">{{ number_format($s->precio_alta_gama, 2) }}</td>
+                <td class="text-right">{{ number_format($s->precio_carga_pesada, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
-
-    <div class="totales">
-        TOTAL INGRESOS MOSTRADOR: <span style="color: #16a34a;">$ {{ number_format($totalVentas, 2) }}</span>
-    </div>
 
     <div class="footer">
         Generado el {{ now()->format('d/m/Y H:i') }} — Sistema AutoSys | Página <span class="page-number"></span>

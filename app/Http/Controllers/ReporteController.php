@@ -72,18 +72,29 @@ class ReporteController extends Controller
         // =============================================
         // 4. Balance financiero (ingresos por mes)
         // =============================================
-        $ingresosPorMes = Factura::selectRaw('MONTH(created_at) as mes, SUM(total_facturado) as total')
+        $ingresosFacturas = Factura::selectRaw('MONTH(created_at) as mes, SUM(total_facturado) as total')
             ->whereYear('created_at', $anio)
             ->groupByRaw('MONTH(created_at)')
             ->pluck('total', 'mes');
 
-        $sueldosMensuales = Empleado::sum('sueldo_base');
+        $ingresosVentas = Venta::selectRaw('MONTH(created_at) as mes, SUM(total) as total')
+            ->whereYear('created_at', $anio)
+            ->groupByRaw('MONTH(created_at)')
+            ->pluck('total', 'mes');
+
+        $egresosPorMes = \App\Models\AsientoContable::egresos()
+            ->selectRaw('MONTH(fecha) as mes, SUM(monto) as total')
+            ->whereYear('fecha', $anio)
+            ->groupByRaw('MONTH(fecha)')
+            ->pluck('total', 'mes');
 
         $ingresosData = [];
         $egresosData = [];
         for ($m = 1; $m <= 12; $m++) {
-            $ingresosData[] = (float) ($ingresosPorMes[$m] ?? 0);
-            $egresosData[] = ($ingresosPorMes[$m] ?? 0) > 0 ? $sueldosMensuales : 0;
+            $ingresoF = (float) ($ingresosFacturas[$m] ?? 0);
+            $ingresoV = (float) ($ingresosVentas[$m] ?? 0);
+            $ingresosData[] = $ingresoF + $ingresoV;
+            $egresosData[] = (float) ($egresosPorMes[$m] ?? 0);
         }
 
         // =============================================

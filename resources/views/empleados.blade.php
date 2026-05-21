@@ -7,9 +7,14 @@
             <h2 class="text-2xl font-bold text-[#263A47]">Empleados y Nómina Automatizada</h2>
             <p class="text-[#728495]">Cálculo de esquema híbrido: Sueldo Fijo + Comisiones</p>
         </div>
-        <button onclick="abrirModalCrear()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
-            <i class="ph ph-user-plus text-xl"></i> Nuevo Empleado
-        </button>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('empleados.reporte') }}" target="_blank" class="bg-white text-[#263A47] border border-[#263A47] px-4 py-2.5 rounded-lg hover:bg-[#F1F4F8] shadow-sm transition-all flex items-center gap-2 font-medium">
+                <i class="ph ph-file-pdf text-xl text-red-500"></i> Reporte PDF
+            </a>
+            <button onclick="abrirModalCrear()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
+                <i class="ph ph-user-plus text-xl"></i> Nuevo Empleado
+            </button>
+        </div>
     </div>
 
     @if(session('exito'))

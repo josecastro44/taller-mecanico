@@ -8,8 +8,8 @@
             <p class="text-[#728495]">Registro de ventas directas de repuestos e insumos al detal</p>
         </div>
         <div class="flex gap-3">
-            <a href="{{ route('ventas.reporte') }}" target="_blank" class="bg-white border-2 border-[#263A47] text-[#263A47] px-4 py-2.5 rounded-lg hover:bg-gray-50 shadow-sm transition-all flex items-center gap-2 font-bold">
-                <i class="ph ph-files text-xl"></i> Cierre de Ventas
+            <a href="{{ route('ventas.reporte') }}" target="_blank" class="bg-white text-[#263A47] border border-[#263A47] px-4 py-2.5 rounded-lg hover:bg-[#F1F4F8] shadow-sm transition-all flex items-center gap-2 font-medium">
+                <i class="ph ph-file-pdf text-xl text-red-500"></i> Reporte PDF
             </a>
             <button onclick="abrirModalVenta()" class="bg-[#263A47] text-white px-5 py-2.5 rounded-lg hover:bg-[#4A5B6A] shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2 font-medium">
                 <i class="ph ph-shopping-cart text-xl"></i> Nueva Venta Rápida

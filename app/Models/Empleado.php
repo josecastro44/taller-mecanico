@@ -16,6 +16,11 @@ class Empleado extends Model
         'user_id'
     ];
 
+    protected $casts = [
+        'sueldo_base' => 'decimal:2',
+        'comision' => 'decimal:2',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

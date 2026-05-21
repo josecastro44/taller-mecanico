@@ -63,4 +63,12 @@ class ProveedorController extends Controller
         Proveedor::findOrFail($id)->delete();
         return back()->with('exito', '¡Proveedor eliminado del directorio!');
     }
+
+    public function imprimirReporte()
+    {
+        $proveedores = Proveedor::orderBy('nombre')->get();
+        $pdf = \PDF::loadView('pdfs.reporte_proveedores', compact('proveedores'));
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->stream('reporte_proveedores.pdf');
+    }
 }

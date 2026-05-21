@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Factura;
 use App\Models\Pago;
-use App\Models\Empleado; 
+use App\Models\Empleado;
+use App\Models\GastoOperativo;
 use App\Models\OrdenServicio;
 use App\Services\BcvService;
+use App\Services\ContabilidadService;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -19,13 +21,18 @@ class FinanzasController extends Controller
         $facturas = Factura::with('pagos')->orderBy('created_at', 'desc')->paginate(10);
         $inicioMes = Carbon::now()->startOfMonth();
 
-        $ingresosBrutos = Factura::where('created_at', '>=', $inicioMes)->sum('total_facturado');
+        // Ventas de mostrador del mes
+        $ventasMostrador = \App\Models\Venta::where('created_at', '>=', $inicioMes)->sum('total');
+
+        $ingresosBrutos = Factura::where('created_at', '>=', $inicioMes)->sum('total_facturado') + $ventasMostrador;
         $ingresosBrutosBs = Pago::where('created_at', '>=', $inicioMes)->get()->sum(function($p) {
             return $p->monto * $p->tasa_bcv;
         });
 
-        $egresosTotales = Empleado::sum('sueldo_base');
-        $utilidadNeta = $ingresosBrutos - $egresosTotales;
+        $egresosSueldos = Empleado::sum('sueldo_base'); // Asumiendo nómina mensual fija por ahora
+        $egresosGastos = GastoOperativo::where('estado', 'pagado')->where('fecha_pago', '>=', $inicioMes)->sum('monto');
+        $egresosTotales = round($egresosSueldos + $egresosGastos, 2);
+        $utilidadNeta = round($ingresosBrutos - $egresosTotales, 2);
 
         // Nuevas métricas
         $totalPendiente = Factura::where('estado_pago', '!=', 'Pagado')->sum('saldo_pendiente');
@@ -36,7 +43,7 @@ class FinanzasController extends Controller
 
         return view('finanzas', compact(
             'facturas', 'ingresosBrutos', 'ingresosBrutosBs', 'egresosTotales', 'utilidadNeta',
-            'totalPendiente', 'facturasPendientes', 'tasaBcv'
+            'totalPendiente', 'facturasPendientes', 'tasaBcv', 'ventasMostrador'
         ));
     }
 
@@ -71,13 +78,13 @@ class FinanzasController extends Controller
     {
         $request->validate([
             'referencia'         => 'required|string|max:255',
-            'subtotal_repuestos' => 'required|numeric|min:0',
-            'subtotal_mano_obra' => 'required|numeric|min:0',
+            'subtotal_repuestos' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'subtotal_mano_obra' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
         ]);
 
-        $subtotalRepuestos = $request->subtotal_repuestos;
-        $subtotalManoObra  = $request->subtotal_mano_obra;
-        $baseImponible     = $subtotalRepuestos + $subtotalManoObra;
+        $subtotalRepuestos = round((float) $request->subtotal_repuestos, 2);
+        $subtotalManoObra  = round((float) $request->subtotal_mano_obra, 2);
+        $baseImponible     = round($subtotalRepuestos + $subtotalManoObra, 2);
         
         $totalFacturado = $baseImponible;
 
@@ -107,6 +114,16 @@ class FinanzasController extends Controller
             }
         }
 
+        // Registrar asiento contable de ingreso automáticamente
+        ContabilidadService::registrarIngreso(
+            $totalFacturado,
+            'Factura emitida: ' . $numeroFactura . ' — ' . $request->referencia,
+            $numeroFactura,
+            'facturacion',
+            Factura::class,
+            $factura->id
+        );
+
         return back()->with('exito', '¡Factura ' . $numeroFactura . ' generada! Vehículo marcado como Entregado.');
     }
 
@@ -117,12 +134,17 @@ class FinanzasController extends Controller
     {
         $request->validate([
             'factura_id'      => 'required|exists:facturas,id',
-            'monto'           => 'required|numeric|min:0.01',
+            'monto'           => ['required', 'numeric', 'min:0.01', 'regex:/^\d+(\.\d{1,2})?$/'],
             'metodo_pago'     => 'required|string',
             'referencia_pago' => 'nullable|string|max:100',
         ]);
 
+        // Validar que el monto no exceda el saldo pendiente
         $factura = Factura::findOrFail($request->factura_id);
+        $saldoPendiente = $factura->saldo_pendiente > 0 ? $factura->saldo_pendiente : $factura->total_facturado;
+        if (round((float) $request->monto, 2) > round($saldoPendiente, 2)) {
+            return back()->withErrors(['monto' => 'El monto ($' . number_format($request->monto, 2) . ') excede el saldo pendiente ($' . number_format($saldoPendiente, 2) . ').']);
+        }
 
         // Obtener tasa BCV actual
         $tasaBcv = BcvService::obtenerTasa();
@@ -162,11 +184,10 @@ class FinanzasController extends Controller
 
     public function imprimirFactura($id)
     {
-        $factura = Factura::with('pagos')->findOrFail($id);
+        $factura = Factura::with(['pagos', 'ordenServicio.servicios', 'ordenServicio.repuestos', 'ordenServicio.vehiculo'])->findOrFail($id);
+        $tasaBcv = BcvService::obtenerTasa()['precio'];
         
-        // Aquí podrías buscar también los datos de la Orden si quieres detallar los repuestos
-        // Por ahora, generamos la legal con los montos que ya tenemos
-        $pdf = Pdf::loadView('pdfs.factura', compact('factura'));
+        $pdf = Pdf::loadView('pdfs.factura', compact('factura', 'tasaBcv'));
         
         // Esto hace que el PDF se abra en una pestaña nueva
         return $pdf->stream('Factura_'.$factura->numero_factura.'.pdf');

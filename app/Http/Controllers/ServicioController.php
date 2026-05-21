@@ -62,4 +62,12 @@ class ServicioController extends Controller
         
         return back()->with('exito', '¡Servicio eliminado del catálogo!');
     }
+
+    public function imprimirReporte()
+    {
+        $servicios = Servicio::orderBy('codigo')->get();
+        $pdf = \PDF::loadView('pdfs.reporte_servicios', compact('servicios'));
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->stream('reporte_servicios.pdf');
+    }
 }
