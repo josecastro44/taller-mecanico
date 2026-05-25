@@ -10,6 +10,7 @@ class Empleado extends Model
         'nombre', 
         'cedula', 
         'telefono', 
+        'direccion',
         'especialidad', 
         'sueldo_base',
         'comision',

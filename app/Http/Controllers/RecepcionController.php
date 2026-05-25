@@ -29,6 +29,7 @@ class RecepcionController extends Controller
             'cedula'        => 'required|min:7|max:10',
             'nombre'        => 'required|string|max:100',
             'telefono'      => 'required|min:10',
+            'direccion'     => 'nullable|string',
             'placa'         => 'required|string|min:6|max:8',
             'marca'         => 'required|string',
             'modelo'        => 'required|string',
@@ -39,9 +40,13 @@ class RecepcionController extends Controller
             'tipo_vehiculo' => 'required|in:sencillo,alta_gama,carga_pesada',
         ]);
 
-        $cliente = Cliente::firstOrCreate(
+        $cliente = Cliente::updateOrCreate(
             ['cedula_rut' => $datosValidados['cedula']], 
-            ['nombre' => $datosValidados['nombre'], 'telefono' => $datosValidados['telefono']]
+            [
+                'nombre' => $datosValidados['nombre'], 
+                'telefono' => $datosValidados['telefono'],
+                'direccion' => $datosValidados['direccion'] ?? null
+            ]
         );
 
         $vehiculo = Vehiculo::firstOrCreate(

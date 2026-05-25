@@ -8,4 +8,10 @@ class Vehiculo extends Model
 {
     //
     protected $guarded = []; // Esto le dice a Laravel que permita guardar todos los campos
+
+    // Relación con Cliente
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
 }

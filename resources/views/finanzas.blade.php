@@ -104,23 +104,28 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-[#B4C5D8]/40 text-[#4A5B6A] text-[11px] uppercase tracking-wider bg-[#F8FAFB]">
-                        <th class="px-4 md:px-5 py-3 font-bold">N° Factura / Ref.</th>
+                        <th class="px-4 md:px-5 py-3 font-bold">N° Factura</th>
+                        <th class="px-4 md:px-5 py-3 font-bold">Referencia</th>
+                        <th class="px-4 md:px-5 py-3 font-bold">Cliente</th>
+                        <th class="px-4 md:px-5 py-3 font-bold">Dirección</th>
                         <th class="px-4 md:px-5 py-3 font-bold text-right">Repuestos</th>
                         <th class="px-4 md:px-5 py-3 font-bold text-right">Mano Obra</th>
+                        <th class="px-4 md:px-5 py-3 font-bold text-right">IVA</th>
                         <th class="px-4 md:px-5 py-3 font-bold text-right">Total</th>
                         <th class="px-4 md:px-5 py-3 font-bold text-center">Estado Pago</th>
                         <th class="px-4 md:px-5 py-3 font-bold text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm text-[#263A47]">
+                <tbody class="text-xs text-[#263A47]">
                     @forelse($facturas as $factura)
                     <tr class="border-b border-[#B4C5D8]/20 hover:bg-[#F1F4F8]/50 transition">
-                        <td class="px-4 md:px-5 py-4">
-                            <p class="font-bold">{{ $factura->numero_factura }}</p>
-                            <p class="text-[11px] text-[#728495]">{{ $factura->referencia }}</p>
-                        </td>
+                        <td class="px-4 md:px-5 py-4 font-bold">{{ $factura->numero_factura }}</td>
+                        <td class="px-4 md:px-5 py-4 text-[#728495]">{{ $factura->referencia }}</td>
+                        <td class="px-4 md:px-5 py-4 font-bold">{{ $factura->ordenServicio->vehiculo->cliente->nombre ?? 'N/A' }}</td>
+                        <td class="px-4 md:px-5 py-4 text-[#728495]">{{ $factura->ordenServicio->vehiculo->cliente->direccion ?? 'N/A' }}</td>
                         <td class="px-4 md:px-5 py-4 text-right font-medium tabular-nums">$ {{ number_format($factura->subtotal_repuestos, 2) }}</td>
                         <td class="px-4 md:px-5 py-4 text-right font-medium tabular-nums">$ {{ number_format($factura->subtotal_mano_obra, 2) }}</td>
+                        <td class="px-4 md:px-5 py-4 text-right font-bold text-blue-600 tabular-nums">$ {{ number_format($factura->monto_iva ?? 0, 2) }}</td>
                         <td class="px-4 md:px-5 py-4 text-right font-bold text-base text-[#263A47] tabular-nums">$ {{ number_format($factura->total_facturado, 2) }}</td>
                         
                         {{-- Estado de pago con badge --}}
@@ -158,7 +163,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-12 text-center text-[#728495]">
+                        <td colspan="10" class="py-12 text-center text-[#728495]">
                             <i class="ph ph-receipt text-4xl block mb-2 text-[#B4C5D8]"></i>
                             No hay facturas emitidas este mes.
                         </td>
@@ -194,7 +199,7 @@
                         <label class="block text-xs font-bold text-[#4A5B6A] mb-1 uppercase tracking-wider">Referencia *</label>
                         <input type="text" name="referencia" value="{{ session('referencia') }}" required placeholder="N° Orden o Detalle" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47] focus:ring-1 focus:ring-[#263A47]/20 text-sm bg-[#F8FAFB]">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-[#4A5B6A] mb-1 uppercase tracking-wider">Repuestos ($) *</label>
                             <input type="number" step="0.01" name="subtotal_repuestos" id="calc-repuestos" value="{{ session('subtotal_repuestos', '0.00') }}" required min="0" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47] text-sm bg-[#F8FAFB] tabular-nums" oninput="calcularTotal()">
@@ -202,6 +207,10 @@
                         <div>
                             <label class="block text-xs font-bold text-[#4A5B6A] mb-1 uppercase tracking-wider">Mano de Obra ($) *</label>
                             <input type="number" step="0.01" name="subtotal_mano_obra" id="calc-mano-obra" value="{{ session('subtotal_mano_obra', '0.00') }}" required min="0" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47] text-sm bg-[#F8FAFB] tabular-nums" oninput="calcularTotal()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#4A5B6A] mb-1 uppercase tracking-wider">IVA (%) *</label>
+                            <input type="number" step="0.01" name="porcentaje_iva" id="calc-porcentaje-iva" value="16" required min="0" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47] text-sm bg-[#F8FAFB] tabular-nums" oninput="calcularTotal()">
                         </div>
                     </div>
                     
@@ -212,6 +221,11 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-[#728495]">Base Imponible:</span>
                             <span class="font-bold text-[#263A47] tabular-nums" id="calc-base">$ 0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm mt-1">
+                            <span class="text-[#728495]">Monto IVA:</span>
+                            <span class="font-bold text-blue-600 tabular-nums" id="calc-iva">$ 0.00</span>
                         </div>
                         
                         <div class="border-t border-[#B4C5D8]/50 pt-2 mt-2">
@@ -312,10 +326,14 @@
         function calcularTotal() {
             const repuestos = parseFloat(document.getElementById('calc-repuestos').value) || 0;
             const manoObra = parseFloat(document.getElementById('calc-mano-obra').value) || 0;
+            const porcentaje_iva = parseFloat(document.getElementById('calc-porcentaje-iva').value) || 0;
+            
             const base = repuestos + manoObra;
-            const total = base;
+            const monto_iva = base * (porcentaje_iva / 100);
+            const total = base + monto_iva;
 
             document.getElementById('calc-base').textContent = '$ ' + base.toFixed(2);
+            document.getElementById('calc-iva').textContent = '$ ' + monto_iva.toFixed(2);
             document.getElementById('calc-total-usd').textContent = '$ ' + total.toFixed(2);
             document.getElementById('calc-total-bs').textContent = 'Bs. ' + (total * tasaBcv).toFixed(2);
         }

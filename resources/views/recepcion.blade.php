@@ -46,10 +46,16 @@
                 </div>
 
                 {{-- NUEVO CAMPO: Teléfono --}}
-                <div class="md:col-span-2">
+                <div>
                     <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Número de Teléfono *</label>
                     <input type="text" name="telefono" value="{{ old('telefono') }}" placeholder="Ej. 0414-1234567" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
                     @error('telefono') <span class="text-red-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Dirección</label>
+                    <input type="text" name="direccion" value="{{ old('direccion') }}" placeholder="Ej. Av. Principal..." class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
+                    @error('direccion') <span class="text-red-500 text-xs font-semibold mt-1 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="md:col-span-2 text-sm font-bold text-[#4A5B6A] uppercase tracking-wider mt-4 border-b-2 border-[#B4C5D8]/30 pb-1">

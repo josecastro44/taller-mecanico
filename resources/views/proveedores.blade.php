@@ -49,23 +49,24 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-sm uppercase tracking-wider">
-                        <th class="px-6 py-4 font-bold">Empresa / RIF</th>
+                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 font-bold">Empresa</th>
+                        <th class="px-6 py-4 font-bold">RIF</th>
                         <th class="px-6 py-4 font-bold">Contacto Principal</th>
                         <th class="px-6 py-4 font-bold">Teléfono</th>
+                        <th class="px-6 py-4 font-bold">Dirección</th>
                         <th class="px-6 py-4 font-bold text-center">Categoría principal</th>
                         <th class="px-6 py-4 font-bold text-center border-l border-[#B4C5D8]/50">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm text-[#263A47]">
+                <tbody class="text-xs text-[#263A47]">
                     @forelse($proveedores as $prov)
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
-                        <td class="px-6 py-4">
-                            <p class="font-bold">{{ $prov->nombre }}</p>
-                            <p class="text-xs text-[#728495]">{{ $prov->rif ?? 'N/A' }}</p>
-                        </td>
+                        <td class="px-6 py-4 font-bold">{{ $prov->nombre }}</td>
+                        <td class="px-6 py-4 text-[#728495]">{{ $prov->rif ?? 'N/A' }}</td>
                         <td class="px-6 py-4 font-medium">{{ $prov->contacto ?? 'Sin contacto' }}</td>
                         <td class="px-6 py-4 text-[#728495]">{{ $prov->telefono ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 text-[#728495]">{{ $prov->direccion ?? 'N/A' }}</td>
                         <td class="px-6 py-4 text-center">
                             @if($prov->categoria)
                                 <span class="bg-[#B4C5D8]/30 text-[#263A47] px-3 py-1 rounded-full text-xs font-bold">{{ $prov->categoria }}</span>
@@ -74,7 +75,7 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-center border-l border-[#B4C5D8]/30 flex justify-center gap-2">
-                            <button type="button" onclick="abrirModalEditar({{ $prov->id }}, '{{ $prov->nombre }}', '{{ $prov->rif }}', '{{ $prov->contacto }}', '{{ $prov->telefono }}', '{{ $prov->categoria }}')" class="text-[#4A5B6A] hover:text-[#263A47] transition-colors" title="Editar">
+                            <button type="button" onclick="abrirModalEditar({{ $prov->id }}, '{{ $prov->nombre }}', '{{ $prov->rif }}', '{{ $prov->contacto }}', '{{ $prov->telefono }}', '{{ $prov->direccion }}', '{{ $prov->categoria }}')" class="text-[#4A5B6A] hover:text-[#263A47] transition-colors" title="Editar">
                                 <i class="ph ph-pencil-simple text-xl"></i>
                             </button>
                             <form action="{{ route('proveedores.eliminar', $prov->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a {{ $prov->nombre }}?');">
@@ -88,7 +89,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-8 text-center text-[#728495]">No hay proveedores registrados.</td>
+                        <td colspan="6" class="px-6 py-8 text-center text-[#728495]">No hay proveedores registrados.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -139,6 +140,10 @@
                         <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Teléfono</label>
                         <input type="text" name="telefono" id="input-telefono" placeholder="Ej. 0414-1234567" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
                     </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Dirección</label>
+                        <input type="text" name="direccion" id="input-direccion" placeholder="Ej. Av. Principal..." class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
+                    </div>
                 </div>
 
                 <div class="mt-8 flex justify-end gap-3">
@@ -168,12 +173,13 @@
             document.getElementById('input-rif').value = '';
             document.getElementById('input-contacto').value = '';
             document.getElementById('input-telefono').value = '';
+            document.getElementById('input-direccion').value = '';
             document.getElementById('input-categoria').value = '';
             
             modal.classList.remove('hidden');
         }
 
-        function abrirModalEditar(id, nombre, rif, contacto, telefono, categoria) {
+        function abrirModalEditar(id, nombre, rif, contacto, telefono, direccion, categoria) {
             titulo.innerText = "Editar Proveedor";
             form.action = "/proveedores/" + id; 
             metodoForm.value = "PUT";
@@ -182,6 +188,7 @@
             document.getElementById('input-rif').value = rif === 'null' ? '' : rif;
             document.getElementById('input-contacto').value = contacto === 'null' ? '' : contacto;
             document.getElementById('input-telefono').value = telefono === 'null' ? '' : telefono;
+            document.getElementById('input-direccion').value = direccion === 'null' ? '' : direccion;
             document.getElementById('input-categoria').value = categoria === 'null' ? '' : categoria;
             
             modal.classList.remove('hidden');

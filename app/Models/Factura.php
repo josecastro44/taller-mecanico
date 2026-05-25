@@ -13,6 +13,7 @@ class Factura extends Model
         'subtotal_repuestos',
         'subtotal_mano_obra',
         'base_imponible',
+        'monto_iva',
         'total_facturado',
         'total_pagado',
         'saldo_pendiente',

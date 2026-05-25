@@ -75,10 +75,14 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-sm uppercase tracking-wider">
+                    <tr class="border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-xs uppercase tracking-wider">
                         <th class="px-6 py-4 font-bold">N° Ticket</th>
                         <th class="px-6 py-4 font-bold">Cliente</th>
+                        <th class="px-6 py-4 font-bold">Cédula</th>
+                        <th class="px-6 py-4 font-bold">Teléfono</th>
+                        <th class="px-6 py-4 font-bold">Dirección</th>
                         <th class="px-6 py-4 font-bold text-center">Artículos</th>
+                        <th class="px-6 py-4 font-bold text-right">IVA</th>
                         <th class="px-6 py-4 font-bold text-right">Total</th>
                         <th class="px-6 py-4 font-bold text-center">Método</th>
                         <th class="px-6 py-4 font-bold text-center">Acciones</th>
@@ -91,12 +95,13 @@
                             <p class="font-bold text-[#4A5B6A]">{{ $venta->numero_ticket }}</p>
                             <p class="text-xs text-[#728495]">{{ $venta->created_at->format('d/m/Y h:i A') }}</p>
                         </td>
-                        <td class="px-6 py-4">
-                            <p class="font-bold">{{ $venta->cliente }}</p>
-                            <p class="text-xs text-[#728495]">CI: {{ $venta->cedula ?? 'N/A' }}</p>
-                        </td>
-                        <td class="px-6 py-4 text-center">{{ $venta->detalles_count }}</td>
-                        <td class="px-6 py-4 text-right font-bold text-green-700">$ {{ number_format($venta->total, 2) }}</td>
+                        <td class="px-6 py-4 text-xs font-bold">{{ $venta->cliente }}</td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $venta->cedula ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $venta->telefono ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $venta->direccion ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 text-center text-xs">{{ $venta->detalles_count }}</td>
+                        <td class="px-6 py-4 text-right font-bold text-blue-600 text-xs">$ {{ number_format($venta->monto_iva ?? 0, 2) }}</td>
+                        <td class="px-6 py-4 text-right font-bold text-green-700 text-xs">$ {{ number_format($venta->total, 2) }}</td>
                         <td class="px-6 py-4 text-center">
                             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">{{ $venta->metodo_pago }}</span>
                         </td>
@@ -148,6 +153,10 @@
                             <input type="text" name="telefono" required placeholder="0414-0000000" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Dirección</label>
+                        <input type="text" name="direccion" placeholder="Ej. Av. Principal..." class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
+                    </div>
 
                     {{-- Fila 3: Producto --}}
                     <div class="pt-2 border-t border-gray-200">
@@ -161,10 +170,14 @@
                     </div>
                     
                     {{-- Fila 4: Cantidad y Pago --}}
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Cantidad *</label>
                             <input type="number" name="cantidad" required min="1" value="1" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">IVA (%) *</label>
+                            <input type="number" step="0.01" name="porcentaje_iva" required value="16" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Método de Pago *</label>

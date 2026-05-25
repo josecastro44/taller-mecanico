@@ -65,8 +65,11 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-white border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-sm uppercase tracking-wider">
-                        <th class="px-6 py-4 font-bold">Empleado / Cédula</th>
+                    <tr class="bg-white border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 font-bold">Empleado</th>
+                        <th class="px-6 py-4 font-bold">Cédula</th>
+                        <th class="px-6 py-4 font-bold">Teléfono</th>
+                        <th class="px-6 py-4 font-bold">Dirección</th>
                         <th class="px-6 py-4 font-bold">Acceso (Sistema)</th>
                         <th class="px-6 py-4 font-bold">Rol / Especialidad</th>
                         <th class="px-6 py-4 font-bold text-right">Sueldo Fijo</th>
@@ -78,9 +81,11 @@
                     @forelse($empleados as $empleado)
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
                         <td class="px-6 py-4">
-                            <p class="font-bold">{{ $empleado->nombre }}</p>
-                            <p class="text-xs text-[#728495]">{{ $empleado->cedula }} | {{ $empleado->telefono }}</p>
+                            <p class="font-bold text-xs">{{ $empleado->nombre }}</p>
                         </td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $empleado->cedula }}</td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $empleado->telefono }}</td>
+                        <td class="px-6 py-4 text-xs text-[#728495]">{{ $empleado->direccion ?? 'N/A' }}</td>
                         <td class="px-6 py-4">
                             <p class="text-sm font-semibold text-blue-600"><i class="ph ph-envelope-simple"></i> {{ $empleado->user->email ?? 'No asignado' }}</p>
                             <p class="text-xs font-mono text-[#98A9BE] mt-0.5"><i class="ph ph-password"></i> ••••••</p>
@@ -97,7 +102,7 @@
                             <p class="text-lg text-green-600 mt-1">$ {{ number_format($comisionesPorEmpleado[$empleado->id]['comision_ganada'] ?? 0, 2) }}</p>
                         </td>
                         <td class="px-6 py-4 text-center border-l border-[#B4C5D8]/30 flex justify-center gap-2">
-                            <button type="button" onclick="abrirModalEditar({{ $empleado->id }}, '{{ $empleado->nombre }}', '{{ $empleado->cedula }}', '{{ $empleado->telefono }}', '{{ $empleado->especialidad }}', {{ $empleado->sueldo_base }}, {{ $empleado->comision }}, '{{ $empleado->user->email ?? '' }}', '{{ $empleado->user->rol ?? 'mecanico' }}')" class="text-[#4A5B6A] hover:text-[#263A47] transition-colors" title="Editar">
+                            <button type="button" onclick="abrirModalEditar({{ $empleado->id }}, '{{ $empleado->nombre }}', '{{ $empleado->cedula }}', '{{ $empleado->telefono }}', '{{ $empleado->direccion }}', '{{ $empleado->especialidad }}', {{ $empleado->sueldo_base }}, {{ $empleado->comision }}, '{{ $empleado->user->email ?? '' }}', '{{ $empleado->user->rol ?? 'mecanico' }}')" class="text-[#4A5B6A] hover:text-[#263A47] transition-colors" title="Editar">
                                 <i class="ph ph-pencil-simple text-xl"></i>
                             </button>
                             <form action="{{ route('empleados.eliminar', $empleado->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a este empleado?');">
@@ -145,6 +150,10 @@
                     <div>
                         <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Teléfono</label>
                         <input type="text" name="telefono" id="input-telefono" placeholder="Ej. 0414-0000000" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Dirección</label>
+                        <input type="text" name="direccion" id="input-direccion" placeholder="Ej. Av. Principal..." class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2.5 outline-none focus:border-[#263A47]">
                     </div>
                     
                     <div class="md:col-span-2 border-t border-[#B4C5D8]/50 pt-4 mt-2" id="seccion-acceso-titulo">
@@ -217,6 +226,7 @@
             document.getElementById('input-nombre').value = '';
             document.getElementById('input-cedula').value = '';
             document.getElementById('input-telefono').value = '';
+            document.getElementById('input-direccion').value = '';
             document.getElementById('input-especialidad').value = 'Mecánica General';
             document.getElementById('input-sueldo').value = '';
             document.getElementById('input-comision').value = '';
@@ -233,7 +243,7 @@
             modal.classList.remove('hidden');
         }
 
-        function abrirModalEditar(id, nombre, cedula, telefono, especialidad, sueldo, comision, correo, rol) {
+        function abrirModalEditar(id, nombre, cedula, telefono, direccion, especialidad, sueldo, comision, correo, rol) {
             titulo.innerText = "Editar Empleado";
             form.action = "/empleados/" + id; 
             metodoForm.value = "PUT";
@@ -241,6 +251,7 @@
             document.getElementById('input-nombre').value = nombre;
             document.getElementById('input-cedula').value = cedula;
             document.getElementById('input-telefono').value = telefono === 'null' ? '' : telefono;
+            document.getElementById('input-direccion').value = direccion === 'null' ? '' : direccion;
             document.getElementById('input-especialidad').value = especialidad;
             document.getElementById('input-sueldo').value = sueldo;
             document.getElementById('input-comision').value = comision;

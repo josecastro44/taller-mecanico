@@ -45,21 +45,25 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-sm uppercase tracking-wider">
+                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-xs uppercase tracking-wider">
                         <th class="px-6 py-4 font-bold">N° Orden</th>
                         <th class="px-6 py-4 font-bold">Proveedor</th>
+                        <th class="px-6 py-4 font-bold">Dirección</th>
                         <th class="px-6 py-4 font-bold">Fecha</th>
+                        <th class="px-6 py-4 font-bold text-right">IVA</th>
                         <th class="px-6 py-4 font-bold text-right">Monto Total</th>
                         <th class="px-6 py-4 font-bold text-center">Estado</th>
                         <th class="px-6 py-4 font-bold text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm text-[#263A47]">
+                <tbody class="text-xs text-[#263A47]">
                     @forelse($compras as $compra)
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition">
                         <td class="px-6 py-4 font-bold">{{ $compra->numero_orden }}</td>
                         <td class="px-6 py-4">{{ $compra->proveedor->nombre }}</td>
+                        <td class="px-6 py-4 text-[#728495]">{{ $compra->proveedor->direccion ?? 'N/A' }}</td>
                         <td class="px-6 py-4 text-[#728495]">{{ $compra->created_at->format('d M Y') }}</td>
+                        <td class="px-6 py-4 text-right font-bold text-blue-600">$ {{ number_format($compra->monto_iva ?? 0, 2) }}</td>
                         <td class="px-6 py-4 text-right font-bold text-red-600">$ {{ number_format($compra->total, 2) }}</td>
                         <td class="px-6 py-4 text-center">
                             @if($compra->estado === 'Recibido')
@@ -83,7 +87,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-[#728495]">No hay órdenes de compra registradas.</td>
+                        <td colspan="8" class="px-6 py-8 text-center text-[#728495]">No hay órdenes de compra registradas.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -124,7 +128,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-3 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Cantidad *</label>
                             <input type="number" name="cantidad" required min="1" value="1" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
@@ -132,6 +136,10 @@
                         <div>
                             <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">Costo Unitario ($) *</label>
                             <input type="number" name="costo_unitario" step="0.01" required placeholder="0.00" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-[#4A5B6A] mb-1">IVA (%) *</label>
+                            <input type="number" step="0.01" name="porcentaje_iva" required value="16" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
                         </div>
                     </div>
                     <div>

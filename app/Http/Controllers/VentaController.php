@@ -37,14 +37,15 @@ class VentaController extends Controller
 
     public function guardar(Request $request)
     {
-        // Validamos los campos nuevos
         $request->validate([
-            'cliente'     => 'required|string',
-            'cedula'      => 'required|string',
-            'telefono'    => 'required|string',
-            'repuesto_id' => 'required|exists:repuestos,id',
-            'cantidad'    => 'required|integer|min:1',
-            'metodo_pago' => 'required|string'
+            'cliente'        => 'required|string',
+            'cedula'         => 'required|string',
+            'telefono'       => 'required|string',
+            'direccion'      => 'nullable|string',
+            'repuesto_id'    => 'required|exists:repuestos,id',
+            'cantidad'       => 'required|integer|min:1',
+            'metodo_pago'    => 'required|string',
+            'porcentaje_iva' => 'nullable|numeric|min:0'
         ]);
 
         $repuesto = Repuesto::findOrFail($request->repuesto_id);
@@ -53,8 +54,12 @@ class VentaController extends Controller
             return back()->withErrors(['stock' => 'No hay suficiente stock. Quedan: ' . $repuesto->stock]);
         }
 
-        $precioReal = round((float) ($repuesto->precio_venta ?? 0), 2);
-        $totalVenta = round($precioReal * $request->cantidad, 2);
+        $precioReal = round((float) ($repuesto->precio_venta ?? $repuesto->precio ?? 0), 2);
+        $subtotal = round($precioReal * $request->cantidad, 2);
+        
+        $porcentaje_iva = $request->filled('porcentaje_iva') ? (float)$request->porcentaje_iva : 16;
+        $monto_iva = round($subtotal * ($porcentaje_iva / 100), 2);
+        $totalVenta = $subtotal + $monto_iva;
 
         // Generar número de ticket seguro
         $ultimoRegistro = Venta::latest('id')->first();
@@ -67,7 +72,9 @@ class VentaController extends Controller
             'cliente'       => $request->cliente,
             'cedula'        => $request->cedula,
             'telefono'      => $request->telefono,
+            'direccion'     => $request->direccion,
             'total'         => $totalVenta,
+            'monto_iva'     => $monto_iva,
             'metodo_pago'   => $request->metodo_pago
         ]);
 

@@ -81,8 +81,11 @@
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-sm uppercase tracking-wider">
-                        <th class="px-6 py-4 font-bold">Información de la Pieza</th>
+                    <tr class="bg-[#B4C5D8]/20 border-b-2 border-[#B4C5D8] text-[#4A5B6A] text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 font-bold">Repuesto</th>
+                        <th class="px-6 py-4 font-bold">Cód / Marca</th>
+                        <th class="px-6 py-4 font-bold">Proveedor</th>
+                        <th class="px-6 py-4 font-bold">Compatibilidad</th>
                         <th class="px-6 py-4 font-bold text-center">Stock</th>
                         <th class="px-6 py-4 font-bold text-right">Costo (Compra)</th>
                         <th class="px-6 py-4 font-bold text-right">Precio Venta (PVP)</th>
@@ -90,15 +93,17 @@
                         <th class="px-6 py-4 font-bold text-center border-l border-[#B4C5D8]/50">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm text-[#263A47]">
+                <tbody class="text-xs text-[#263A47]">
                     @forelse($repuestos as $repuesto)
                     <tr class="border-b border-[#B4C5D8]/30 hover:bg-[#B4C5D8]/10 transition {{ $repuesto->stock <= $repuesto->stock_minimo ? 'bg-red-50/50' : '' }}">
                         {{-- 1. INFO --}}
-                        <td class="px-6 py-4">
-                            <p class="font-bold text-base">{{ $repuesto->nombre }}</p>
-                            <p class="text-xs text-[#728495]">Cod: {{ $repuesto->codigo ?? 'N/A' }} | Marca: {{ $repuesto->marca ?? 'S/M' }}</p>
-                            <p class="text-[10px] text-blue-600 font-medium uppercase">{{ $repuesto->marca_vehiculo }} {{ $repuesto->modelo_vehiculo }} ({{ $repuesto->año_vehiculo }})</p>
+                        <td class="px-6 py-4 font-bold">{{ $repuesto->nombre }}</td>
+                        <td class="px-6 py-4 text-[#728495]">
+                            Cod: {{ $repuesto->codigo ?? 'N/A' }}<br>
+                            Marca: {{ $repuesto->marca ?? 'S/M' }}
                         </td>
+                        <td class="px-6 py-4 text-blue-600 font-medium">{{ $repuesto->proveedor->nombre ?? 'N/A' }}</td>
+                        <td class="px-6 py-4 text-blue-600 font-medium uppercase">{{ $repuesto->marca_vehiculo }} {{ $repuesto->modelo_vehiculo }} ({{ $repuesto->año_vehiculo }})</td>
                         
                         {{-- 2. STOCK (Restaurado) --}}
                         <td class="px-6 py-4 text-center">
@@ -167,7 +172,7 @@
                                     <input type="text" name="modelo_vehiculo" value="{{ $repuesto->modelo_vehiculo }}" placeholder="Modelo Vehículo" class="w-full bg-white border border-[#CBD5E1] rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500">
                                     <input type="text" name="año_vehiculo" value="{{ $repuesto->año_vehiculo }}" placeholder="Año/Rango" class="w-full bg-white border border-[#CBD5E1] rounded-lg px-3 py-2 text-sm outline-none focus:border-emerald-500">
                                 </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
                                         <label class="block text-xs font-bold text-[#475569] uppercase mb-1">Marca del Repuesto</label>
                                         <input type="text" name="marca" value="{{ $repuesto->marca }}" class="w-full border border-[#CBD5E1] rounded-lg px-4 py-2 outline-none focus:border-emerald-500 transition-all">
@@ -179,6 +184,15 @@
                                             <option value="Frenos" {{ $repuesto->categoria == 'Frenos' ? 'selected' : '' }}>Frenos</option>
                                             <option value="Motor" {{ $repuesto->categoria == 'Motor' ? 'selected' : '' }}>Motor</option>
                                             <option value="Suspensión" {{ $repuesto->categoria == 'Suspensión' ? 'selected' : '' }}>Suspensión</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-[#475569] uppercase mb-1">Proveedor / Distribuidor</label>
+                                        <select name="proveedor_id" class="w-full border border-[#CBD5E1] rounded-lg px-4 py-2 bg-white outline-none focus:border-emerald-500 transition-all">
+                                            <option value="">Seleccione un Proveedor...</option>
+                                            @foreach($proveedores as $proveedor)
+                                                <option value="{{ $proveedor->id }}" {{ $repuesto->proveedor_id == $proveedor->id ? 'selected' : '' }}>{{ $proveedor->nombre }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -210,7 +224,7 @@
                     </div>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-10 text-center text-[#728495]">No se encontraron repuestos con ese criterio.</td>
+                        <td colspan="9" class="px-6 py-10 text-center text-[#728495]">No se encontraron repuestos con ese criterio.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -255,7 +269,7 @@
                     <input type="text" name="modelo_vehiculo" placeholder="Modelo (Ej: Corolla)" class="w-full bg-white border border-[#B4C5D8] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#263A47]">
                     <input type="text" name="año_vehiculo" placeholder="Año (Ej: 2010)" class="w-full bg-white border border-[#B4C5D8] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#263A47]">
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-[#4A5B6A] uppercase mb-1">Marca del Repuesto</label>
                         <input type="text" name="marca" placeholder="Ej. Bosch, Federal" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 outline-none focus:border-[#263A47]">
@@ -267,6 +281,15 @@
                             <option value="Frenos">Frenos</option>
                             <option value="Motor">Motor</option>
                             <option value="Suspensión">Suspensión</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-[#4A5B6A] uppercase mb-1">Proveedor / Distribuidor</label>
+                        <select name="proveedor_id" class="w-full border border-[#B4C5D8] rounded-lg px-4 py-2 bg-white outline-none focus:border-[#263A47]">
+                            <option value="">Seleccione un Proveedor...</option>
+                            @foreach($proveedores as $proveedor)
+                                <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

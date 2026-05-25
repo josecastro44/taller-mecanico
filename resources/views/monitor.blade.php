@@ -50,27 +50,29 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-[#F8FAFB] border-b-2 border-[#B4C5D8]/50 text-[#4A5B6A] text-[11px] uppercase tracking-wider">
-                        <th class="px-5 py-3.5 font-bold">O.S. / Fecha</th>
+                        <th class="px-5 py-3.5 font-bold">O.S.</th>
+                        <th class="px-5 py-3.5 font-bold">Fecha</th>
+                        <th class="px-5 py-3.5 font-bold">Cliente</th>
+                        <th class="px-5 py-3.5 font-bold">Dirección</th>
                         <th class="px-5 py-3.5 font-bold">Vehículo</th>
+                        <th class="px-5 py-3.5 font-bold">Placa</th>
                         <th class="px-5 py-3.5 font-bold">Mecánico</th>
                         <th class="px-5 py-3.5 font-bold">Progreso</th>
                         <th class="px-5 py-3.5 font-bold text-center">Estatus</th>
                         <th class="px-5 py-3.5 font-bold text-center">Acción</th>
                     </tr>
                 </thead>
-                <tbody class="text-sm text-[#263A47]" id="monitor-tbody">
+                <tbody class="text-xs text-[#263A47]" id="monitor-tbody">
                     @forelse($ordenes as $orden)
                     <tr class="border-b border-[#B4C5D8]/20 hover:bg-[#F1F4F8]/50 transition monitor-row"
                         data-placa="{{ $orden->vehiculo->placa ?? '' }}"
                         data-mecanico="{{ $orden->mecanico->nombre ?? '' }}">
-                        <td class="px-5 py-4">
-                            <p class="font-bold text-[#263A47]">#00{{ $orden->id }}</p>
-                            <p class="text-[11px] text-[#728495]">{{ $orden->created_at->format('d M, h:i A') }}</p>
-                        </td>
-                        <td class="px-5 py-4">
-                            <p class="font-bold">{{ $orden->vehiculo->marca ?? '' }} {{ $orden->vehiculo->modelo ?? '' }}</p>
-                            <p class="text-xs font-mono font-bold text-[#98A9BE]">{{ $orden->vehiculo->placa ?? '' }}</p>
-                        </td>
+                        <td class="px-5 py-4 font-bold text-[#263A47]">#00{{ $orden->id }}</td>
+                        <td class="px-5 py-4 text-[#728495]">{{ $orden->created_at->format('d M, h:i A') }}</td>
+                        <td class="px-5 py-4 font-bold">{{ $orden->vehiculo->cliente->nombre ?? 'N/A' }}</td>
+                        <td class="px-5 py-4 text-[#728495]">{{ $orden->vehiculo->cliente->direccion ?? 'N/A' }}</td>
+                        <td class="px-5 py-4 font-bold">{{ $orden->vehiculo->marca ?? '' }} {{ $orden->vehiculo->modelo ?? '' }}</td>
+                        <td class="px-5 py-4 font-mono font-bold text-[#98A9BE]">{{ $orden->vehiculo->placa ?? '' }}</td>
                         <td class="px-5 py-4">
                             <div class="flex items-center gap-2">
                                 <div class="w-7 h-7 rounded-full bg-[#4A5B6A]/10 flex items-center justify-center">
@@ -128,7 +130,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="py-16 text-center text-[#728495]">
+                        <td colspan="10" class="py-16 text-center text-[#728495]">
                             <i class="ph ph-car-simple text-5xl mb-2 block text-[#B4C5D8]"></i>
                             No hay vehículos en el taller actualmente.
                         </td>

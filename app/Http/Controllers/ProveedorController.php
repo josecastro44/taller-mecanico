@@ -35,6 +35,7 @@ class ProveedorController extends Controller
             'rif'       => 'nullable|string',
             'contacto'  => 'nullable|string',
             'telefono'  => 'nullable|string',
+            'direccion' => 'nullable|string',
             'categoria' => 'nullable|string',
         ]);
 
@@ -51,6 +52,7 @@ class ProveedorController extends Controller
             'rif'       => 'nullable|string',
             'contacto'  => 'nullable|string',
             'telefono'  => 'nullable|string',
+            'direccion' => 'nullable|string',
             'categoria' => 'nullable|string',
         ]);
 

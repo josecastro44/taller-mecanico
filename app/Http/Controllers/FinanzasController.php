@@ -18,7 +18,7 @@ class FinanzasController extends Controller
 {
     public function index()
     {
-        $facturas = Factura::with('pagos')->orderBy('created_at', 'desc')->paginate(10);
+        $facturas = Factura::with(['pagos', 'ordenServicio.vehiculo.cliente'])->orderBy('created_at', 'desc')->paginate(10);
         $inicioMes = Carbon::now()->startOfMonth();
 
         // Ventas de mostrador del mes
@@ -80,13 +80,17 @@ class FinanzasController extends Controller
             'referencia'         => 'required|string|max:255',
             'subtotal_repuestos' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
             'subtotal_mano_obra' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'porcentaje_iva'     => 'nullable|numeric|min:0'
         ]);
 
         $subtotalRepuestos = round((float) $request->subtotal_repuestos, 2);
         $subtotalManoObra  = round((float) $request->subtotal_mano_obra, 2);
         $baseImponible     = round($subtotalRepuestos + $subtotalManoObra, 2);
         
-        $totalFacturado = $baseImponible;
+        $porcentaje_iva = $request->filled('porcentaje_iva') ? (float)$request->porcentaje_iva : 16;
+        $monto_iva = round($baseImponible * ($porcentaje_iva / 100), 2);
+        
+        $totalFacturado = $baseImponible + $monto_iva;
 
         $ultimoRegistro = Factura::latest('id')->first();
         $siguienteId = $ultimoRegistro ? $ultimoRegistro->id + 1 : 1;
@@ -99,6 +103,7 @@ class FinanzasController extends Controller
             'subtotal_repuestos' => $subtotalRepuestos,
             'subtotal_mano_obra' => $subtotalManoObra,
             'base_imponible'     => $baseImponible,
+            'monto_iva'          => $monto_iva,
             'total_facturado'    => $totalFacturado,
             'saldo_pendiente'    => $totalFacturado,
             'estado_pago'        => 'Pendiente'

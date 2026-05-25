@@ -17,7 +17,8 @@ class Repuesto extends Model
         'costo_adquisicion',
         'precio_venta',
         'stock',
-        'stock_minimo'
+        'stock_minimo',
+        'proveedor_id'
     ];
 
     protected $casts = [
@@ -38,5 +39,10 @@ class Repuesto extends Model
                 $repuesto->codigo = 'SKU-' . date('Y') . '-' . str_pad($count, 5, '0', STR_PAD_LEFT);
             }
         });
+    }
+
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class);
     }
 }

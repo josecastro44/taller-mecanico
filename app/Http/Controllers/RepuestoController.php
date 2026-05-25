@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Repuesto;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -33,7 +34,9 @@ class RepuestoController extends Controller
         $totalRepuestos = Repuesto::count();
         $stockCritico = Repuesto::where('stock', '<=', 5)->count(); 
 
-        return view('repuestos', compact('repuestos', 'buscar', 'totalRepuestos', 'stockCritico'));
+        $proveedores = Proveedor::orderBy('nombre', 'asc')->get();
+
+        return view('repuestos', compact('repuestos', 'buscar', 'totalRepuestos', 'stockCritico', 'proveedores'));
     }
 
     /**
@@ -50,10 +53,11 @@ class RepuestoController extends Controller
             'costo_adquisicion' => 'required|numeric|min:0',
             'precio_venta'      => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
+            'proveedor_id'      => 'nullable|exists:proveedores,id',
         ]);
 
         $data = $request->only([
-            'nombre', 'codigo', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock'
+            'nombre', 'codigo', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock', 'proveedor_id'
         ]);
         $data['costo_adquisicion'] = round((float) $data['costo_adquisicion'], 2);
         $data['precio_venta'] = round((float) $data['precio_venta'], 2);
@@ -76,12 +80,13 @@ class RepuestoController extends Controller
             'costo_adquisicion' => 'required|numeric|min:0',
             'precio_venta'      => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
+            'proveedor_id'      => 'nullable|exists:proveedores,id',
         ]);
 
         $repuesto = Repuesto::findOrFail($id);
         
         $data = $request->only([
-            'nombre', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock'
+            'nombre', 'marca_vehiculo', 'modelo_vehiculo', 'año_vehiculo', 'costo_adquisicion', 'precio_venta', 'stock', 'proveedor_id'
         ]);
         $data['costo_adquisicion'] = round((float) $data['costo_adquisicion'], 2);
         $data['precio_venta'] = round((float) $data['precio_venta'], 2);

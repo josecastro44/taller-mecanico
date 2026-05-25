@@ -36,10 +36,15 @@ class CompraController extends Controller
             'repuesto_id' => 'required|exists:repuestos,id',
             'cantidad' => 'required|integer|min:1',
             'costo_unitario' => ['required', 'numeric', 'min:0.01', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'estado' => 'required|string'
+            'estado' => 'required|string',
+            'porcentaje_iva' => 'nullable|numeric|min:0'
         ]);
 
         $subtotal = round($request->cantidad * round((float) $request->costo_unitario, 2), 2);
+        
+        $porcentaje_iva = $request->filled('porcentaje_iva') ? (float)$request->porcentaje_iva : 16;
+        $monto_iva = round($subtotal * ($porcentaje_iva / 100), 2);
+        $totalCompra = $subtotal + $monto_iva;
 
         // Crear la Orden Principal
         $ultimoRegistro = Compra::latest('id')->first();
@@ -49,7 +54,8 @@ class CompraController extends Controller
         $compra = Compra::create([
             'numero_orden' => $numeroOrden,
             'proveedor_id' => $request->proveedor_id,
-            'total' => $subtotal,
+            'total' => $totalCompra,
+            'monto_iva' => $monto_iva,
             'estado' => $request->estado
         ]);
 

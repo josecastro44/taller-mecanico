@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Venta extends Model 
 {
-    protected $fillable = ['numero_ticket', 'cliente', 'cedula', 'telefono', 'total', 'metodo_pago'];
+    protected $fillable = ['numero_ticket', 'cliente', 'cedula', 'telefono', 'direccion', 'total', 'monto_iva', 'metodo_pago'];
 
     protected $casts = [
         'total' => 'decimal:2',
